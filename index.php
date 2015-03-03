@@ -49,6 +49,7 @@ if(isset($_REQUEST['mode']))
 $fpath = "./files/$fname.md";	# Change this accordingly
 
 $baseurlapp = dirname($_SERVER['PHP_SELF']);
+if($baseurlapp == '/') $baseurlapp = '';
 $baseurl = "$baseurlapp/$fname";
 $message = "Base URL: $baseurl\\n";
 
@@ -196,7 +197,7 @@ header('Content-Type: text/html; charset=utf-8');
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
-						<li <?php if($fname=="home") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp; ?>">Home</a></li>
+						<li <?php if($fname=="home") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp.'/'; ?>">Home</a></li>
 						<li <?php if($fname=="readme") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp.'/readme'; ?>">Readme</a></li>
 						<li <?php if($fname=="examples") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp.'/examples'; ?>">Examples</a></li>
 						<li class="dropdown">
