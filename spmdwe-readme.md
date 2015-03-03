@@ -47,6 +47,7 @@ In this version, these new features have been added:
 Download
 ---
 There is the link to download:
+
 * [https://github.com/rigon/notes/archive/master.zip](https://github.com/rigon/notes/archive/master.zip)
 
 Installation
