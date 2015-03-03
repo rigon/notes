@@ -1,8 +1,3 @@
-Reference sites:
-
- - [Quick Markdown Example](http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example-printable.html)
- - [Pagedown Extra - Overview](https://github.com/jmcmanus/pagedown-extra/blob/master/README.md)
-
 An h1 header
 ============
 
@@ -169,3 +164,8 @@ $$f *g* h$$
 And note that you can backslash-escape any punctuation characters
 which you wish to be displayed literally, ex.: \`foo\`, \*bar\*, etc.
 
+---
+#### Reference sites:
+
+ - [Quick Markdown Example](http://www.unexpected-vortices.com/sw/rippledoc/quick-markdown-example-printable.html)
+ - [Pagedown Extra - Overview](https://github.com/jmcmanus/pagedown-extra/blob/master/README.md)
