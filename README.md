@@ -47,6 +47,11 @@ In this version, these new features have been added:
 * Ready for Mobile, with responsive layout that automatically adapts
 * Application improvements
 
+Download
+---
+There is the link to download:
+* [https://github.com/rigon/notes/archive/master.zip](https://github.com/rigon/notes/archive/master.zip)
+
 Installation
 ---
 
@@ -74,4 +79,3 @@ The application is pretty simple:
 * If a requested file (`somefile`) doesn't exist, it should be created automatically, and edit mode displayed
 * Otherwise, without any other arguments, a file is loaded in view mode
 * If the application is called without any arguments whatsoever (say, `http://example.com/spmdwe/`), then it loads `readme` and goes into view mode.
-
