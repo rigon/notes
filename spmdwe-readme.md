@@ -4,7 +4,7 @@ Copyleft rigon, December 2014
 
 Homepage and demo:
 
-* [http://www.rigon.tk/notes](http://www.rigon.tk/notes)
+* [http://www.spmdwe.tk](http://www.spmdwe.tk)
 
 Intro
 ---
@@ -51,8 +51,8 @@ Here are the steps needed to install this application, in the form of `bash` com
 
     # mkdir spmdwe # if downloading manually, else:
     # checkout from svn - creates `spmdwe` directory and files in it
-    wget http://www.rigon.tk/notes-2.0.zip
-    unzip notes-2.0.zip
+    wget https://github.com/rigon/notes/archive/master.zip
+    unzip master.zip
 
     chmod 775 spmdwe  # on server, else cannot save backups!
     cd spmdwe/files/
