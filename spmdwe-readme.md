@@ -63,6 +63,15 @@ Here are the steps needed to install this application, in the form of `bash` com
     chmod 775 spmdwe  # on server, else cannot save backups!
     cd spmdwe/files/
 
+Configuration
+---
+To work properly it is required the ```ReWrite``` Module to be active in apache.
+
+Then the next configuration should be used. This can be done via `.htaccess` file or on apache configuration:
+
+    RewriteEngine on
+    RewriteRule ^(?!static/)(.*)$ index.php?file=$1 [L,QSA]
+
 Usage
 ----
 
