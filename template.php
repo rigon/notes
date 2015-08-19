@@ -184,9 +184,9 @@ $file_contents		- contents of the file
 					
 					
 					// Fix width of editor
-					$('.editor-container').width($('#editor').width());
+					$('.editor-container').width($('#editor').width() - 15);
 					$( window ).resize(function() {
-						$('.editor-container').width($('#editor').width());
+						$('.editor-container').width($('#editor').width() - 15);
 					});
 				}
 			}
