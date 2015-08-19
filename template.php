@@ -40,10 +40,18 @@ $file_contents		- contents of the file
 				background-color: #f3f3f3;
 			}
 			.viewer {
-				padding-right: 0;
 			}
 			.editor {
-				padding-right: 0;
+			}
+			@media (min-width: 992px) {
+				.editor-container {
+					position: fixed;
+				}
+			}
+			@media (max-width: 992px) {
+				.editor {
+					padding-left: 0px;
+				}
 			}
 			.editor textarea {
 				font-family: monospace;
@@ -51,7 +59,7 @@ $file_contents		- contents of the file
 				color: black;
 				min-width: 100%;
 				max-width: 100%;
-				height: 70vh;
+				height: 80vh;
 			}
 		</style>
 	</head>
@@ -84,7 +92,7 @@ $file_contents		- contents of the file
 										echo '<li class="dropdown-header">This file has no history</li>';
 									else
 										foreach($file_revisions as $rev)
-											echo '<li><a href="'.$rev.'">'.$rev.'</a></li>';
+											echo "<li><a href=\"$baseurlapp/$rev\">$rev</a></li>";
 								?>
 								
 								<li class="divider"></li>
@@ -125,18 +133,20 @@ $file_contents		- contents of the file
 
 				<!-- Editor -->
 				<?php if ($file_mode=="edit") { ?>
-					<div class="editor col-md-6">
-						<form method="post" action="<?php echo $baseurl; ?>" role="form">
-							<div class="form-group">
-								<div id="wmd-button-bar-editor"></div>
-								<textarea id="wmd-input-editor" class="wmd-input" name="form-input-ta"></textarea>
-							</div>
+					<div id="editor" class="editor col-md-6">
+						<div class="editor-container col-md-6">
+							<form method="post" action="<?php echo $baseurl; ?>" role="form">
+								<div class="form-group">
+									<div id="wmd-button-bar-editor"></div>
+									<textarea id="wmd-input-editor" class="wmd-input" name="form-input-ta"></textarea>
+								</div>
 							
-							<div id="form-group" class="text-right">
-								<button type="submit" class="btn btn-primary" name="mode" value="save_edit">Save</button>
-								<button type="submit" class="btn" name="mode" value="save">Save and View</button>
-							</div>
-						</form>
+								<div id="form-group" class="text-right">
+									<button type="submit" class="btn btn-primary" name="mode" value="save_edit">Save</button>
+									<button type="submit" class="btn" name="mode" value="save">Save and View</button>
+								</div>
+							</form>
+						</div>
 					</div>
 					<script type="text/javascript">
 
@@ -171,6 +181,13 @@ $file_contents		- contents of the file
 						}
 					});
 					editor.run();
+					
+					
+					// Fix width of editor
+					$('.editor-container').width($('#editor').width());
+					$( window ).resize(function() {
+						$('.editor-container').width($('#editor').width());
+					});
 				}
 			}
 		
