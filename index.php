@@ -1,127 +1,160 @@
 <?php
 
-# spmdwe.php
-# copyleft sdaau, 2012
+# copyleft rigon, 2015
 # additions to use directly the Markdown parser via this single file
-# callable online with: spmdwe.php?file=readme.txt
 # see readme.txt for more information
 #
 # test with php-cli:
 # QUERY_STRING="file=readme.txt" php spmdwe.php
-
-// errors:
-//~ ini_set('display_errors', '1');
+# Source: http://people.w3.org/~dom/archives/2004/07/testing-php-pages-with-query_string/
 
 
-// ## MAIN ## /////////
+$file_name = "readme";		# file by default
+$file_mode = "view";		# "view" (implied default); "edit", "save", "save_edit"
 
-#include_once "./php-markdown/markdown.php";
+define('SAVE_ENABLED', true);			# set to false to disable saving ("demo mode")
+define('REVISION_MARKER', '_rev');		# marker indicating if it is a revision file
+define('FILES_PATH', 'files/%s.md');	# path where the files are stored. Use %s to be replaced with the filename
+define('DEFAULT_TEXT', "# Creating a new file\n\nThis file does not exist. You can place your own text here.\n\n**HAVE FUN!**");
 
-//http://people.w3.org/~dom/archives/2004/07/testing-php-pages-with-query_string/
-if (empty($_GET)) {
-	//~ parse_str($_ENV['QUERY_STRING'],$_GET); //nowork
-	parse_str(getenv('QUERY_STRING'),$_GET); //OK
-}
-if (empty($_REQUEST)) {
+# Ensure if the enviroment is correct
+if(empty($_GET))
+	parse_str(getenv('QUERY_STRING'),$_GET);
+
+if(empty($_REQUEST))
 	parse_str(getenv('QUERY_STRING'),$_REQUEST);
-}
 
-//~ echo print_r($_GET);
 
-$fname="home";		# file by default
-$fmode="view";		# "view" (implied default); "edit", "save", "save_edit"
-
-$saveenabled = true;	# set to false to disable saving ("demo mode")
-
-$revisonmarker = '_rev';
-
-# Gets the file
+# Gets the filename
 if(isset($_REQUEST['file'])) {
-	$tmpname=urldecode(preg_replace('/\/\\:*?"<>|/', '', $_REQUEST['file']));
-	if(!empty($tmpname)) $fname = $tmpname;
+	$tmpname = urldecode(preg_replace('/\/\\:*?"<>|/', '', $_REQUEST['file']));
+	if(!empty($tmpname)) $file_name = $tmpname;
 }
-#Gets the mode
-if(isset($_REQUEST['mode']))
-	$fmode=$_REQUEST['mode'];
-	
+
+# Google specific info for crawling
+if($file_name == "google53c7003e2135dc17.html")
+	die("google-site-verification: google53c7003e2135dc17.html");
+if($file_name == "sitemap.xml") 
+	die('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+		<url><loc>http://www.spmdwe.tk/home</loc></url>
+		<url><loc>http://www.spmdwe.tk/readme</loc></url>
+		<url><loc>http://www.spmdwe.tk/examples</loc></url>
+		<url><loc>http://www.spmdwe.tk/markdown_styles</loc></url>
+		</urlset>');
+
 
 # Default path for files
-$fpath = "./files/$fname.md";	# Change this accordingly
+$file_path = sprintf(FILES_PATH, $file_name);
 
-$baseurlapp = dirname($_SERVER['PHP_SELF']);
-if($baseurlapp == '/') $baseurlapp = '';
-$baseurl = "$baseurlapp/$fname";
-$message = "Base URL: $baseurl\\n";
+# Gets the mode
+if(isset($_REQUEST['mode']))
+	$file_mode = $_REQUEST['mode'];
 
-# Applicatoin in Demo mode (read-only)
-if(!$saveenabled) {
-	$fmode="view";
-	$message .= "Demo mode - files are just read only";
-}
 
-# Set file as read-only
-if($fmode=="readonly") {
-	$r=chmod($fpath, 0444);
-	$message .= ($r ? 'Successfully' : 'Unsuccessfully').' changed file to read-only mode\\n';
-	$fmode="view";
-}
+# Inicializations
+$message = "";
+$file_readonly = true;
 
-if($fmode=="save" or $fmode=="save_edit") {
-	// calculate backup filename
-	$posdot = strrpos($fpath, '.');
-	$nfilename = substr($fpath, 0, $posdot);
-	$nextension = substr($fpath, $posdot + 1);
-	
-	$time = time();
-	$nfpath = "$nfilename$revisonmarker$time.$nextension";
+$size_prefix_files_path = stripos(FILES_PATH, '%s');							// Size of the prefix before the filename
+$size_prefix_files_path = ($size_prefix_files_path === false ? strlen(FILES_PATH) : $size_prefix_files_path);
+$size_suffix_files_path = strlen(FILES_PATH) - $size_prefix_files_path - 2;		// Size of the suffix after the filename
 
-	//save backup
-	$r = rename($fpath, $nfpath);
-	$message .= $r ? "Saved old backup to $nfpath.\\n" : "Could not create a backup from $fpath to $nfpath!\\n";
-	$r = chmod($nfpath, 0444);
-	$message .= "Setting backup as read-only: $r\\n";
 
-	// save (new) contents of textarea to original filename
-	$new_content = $_REQUEST['form-input-ta'];
-	if (file_put_contents($fpath, $new_content))
-		$message .= "Saved new content to $fname.\\n"; //
-
-	$message .= "Performed save!\\n";
-	
-	if($fmode=="save")
-		$fmode="view";
-	if($fmode=="save_edit")
-		$fmode="edit";
-}
-
-$freadonly = !is_writable($fpath);
 # If the specified file doesn't exist
-if(!file_exists($fpath)) {
-	$message .= "Cannot find $fname!\\n";
-	$message .= "Proceeding to edit $fname... \\n";
-	$message .= "Restoring edit mode.\\n";
-	$fmode="edit";
-	$freadonly = false;
-	if(!$saveenabled){
-		$fmode="view";
-		$message .= "Demo mode - files are just read only\\n";
+if(!file_exists($file_path)) {
+	$message .= "File $file_name not found. Proceeding to edit\\n";
+	$file_readonly = false;
+}
+else {
+	# Discover if the file is read only
+	$file_readonly = !is_writable($file_path);
+	if($file_readonly) {
+		$file_mode = "view";
+		$message .= "File in read only mode\\n";
 	}
 }
 
-# Gets the file contents
-$ftext = file_get_contents($fpath);
-$message .= "Opening $fname in $fmode mode\\n";
-if($ftext==false) {
-	$ftext="# Creating a new file\n\nThis file does not exist. You can place your own text here.\n\n**HAVE FUN!**";
-	$fmode='edit';
-	$message .= "Cannot open $fname. Proceeding in edit mode...\\n";
+# Applicatoin in Demo mode (read-only)
+if(!SAVE_ENABLED) {
+	$file_mode = "view";
+	$file_readonly = true;
+	$message .= "Demo mode - files are just read only\\n";
 }
 
-# Base path for history files
-$markpos = strrpos($fname, '_rev');
-$basefname = ($markpos === false ? $fname : substr($fname, 0, $markpos));
-$fpath_history = dirname($fpath)."/$basefname\_rev??????????.md";
 
+# Set file as read-only
+if($file_mode == "readonly") {
+	$file_mode = "view";
+	$file_readonly = true;
+	$result = chmod($file_path, 0444);
+	$message .= ($result ? 'Successfully' : 'Unsuccessfully').' changed file to read-only mode\\n';
+}
+
+# Save the file and view or continue editing
+else if(($file_mode == "save" or $file_mode == "save_edit") and !$file_readonly) {
+
+	// Revision file is only created if previous file exists
+	if(file_exists($file_path)) {
+		// calculate backup filename
+		$time = time();
+	
+		$base_file_name = substr($file_path, 0, strlen($file_path) - $size_suffix_files_path);
+		$suffix_file_name = substr($file_path, -$size_suffix_files_path);
+		$revision_file_path = $base_file_name . REVISION_MARKER . $time . $suffix_file_name;
+
+		//save backup as a revision file
+		$result = rename($file_path, $revision_file_path);
+		chmod($revision_file_path, 0444);
+		$message .= ($result ? "Revision saved to $revision_file_path.\\n" : "Could not create revision from $file_path to $revision_file_path!\\n");
+	}
+
+	// save new file (textarea form-input-ta) to original filename
+	$new_content = $_REQUEST['form-input-ta'];
+	if (file_put_contents($file_path, $new_content))
+		$message .= "Saved new content to $file_name.\\n";
+	
+	
+	if($file_mode == 'save')
+		$file_mode = 'view';
+	
+	if($file_mode == 'save_edit')
+		$file_mode = 'edit';
+}
+
+
+
+# Gets the file contents
+$message .= "Opening $file_name in $file_mode mode\\n";
+
+// check if the file exists
+$file_contents = false;
+if(file_exists($file_path))
+	$file_contents = file_get_contents($file_path);
+
+if($file_contents == false) {
+	$file_contents = DEFAULT_TEXT;
+	$file_mode='edit';
+	$message .= "Cannot open $file_name. Proceeding in edit mode...\\n";
+}
+
+
+
+$baseurlapp = dirname($_SERVER['PHP_SELF']);
+if($baseurlapp == '/') $baseurlapp = '';
+$baseurl = "$baseurlapp/$file_name";
+$message .= "Base URL: $baseurl\\n";
+
+# Base path for history files
+$revision_marker_position = strrpos($file_name, REVISION_MARKER);
+$base_file_name = ($revision_marker_position === false ? $file_name : substr($file_name, 0, $revision_marker_position));
+$file_revisions_path = sprintf(FILES_PATH, $base_file_name.REVISION_MARKER.'??????????');
+
+$count = 0;
+$file_revisions = array();
+foreach(glob($file_revisions_path) as $file_revision) {	
+	$file_revisions[$count] = substr($file_revision, $size_prefix_files_path, -$size_suffix_files_path);
+	$count++;
+}
 
 // for unicode output: (http://stackoverflow.com/questions/713293)
 header('Content-Type: text/html; charset=utf-8');
@@ -132,194 +165,5 @@ header('Content-Type: text/html; charset=utf-8');
 //header('Cache-Control: post-check=0, pre-check=0', FALSE);
 //header('Pragma: no-cache');
 
-?><!DOCTYPE html>
-<html>
-	<head>
-		<title><?php echo $fname; ?> - Spmdwe Editor</title>
-		
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		
-		<link rel="stylesheet" type="text/css" href="static/css/pagedown.css" />
-		<link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css" />
-		
-		<script type="text/javascript" src="static/js/Markdown.Converter.js"></script>
-		<script type="text/javascript" src="static/js/Markdown.Sanitizer.js"></script>
-		<script type="text/javascript" src="static/js/Markdown.Editor.js"></script>
-		<script type="text/javascript" src="static/js/Markdown.Extra.js"></script>
-		<script type="text/javascript" src="static/js/MathJax-edit.js"></script>
-		<!-- <script type="text/javascript" src="static/js/call-mathjax-edit.js"></script> -->
-
-		
-		<script src="static/js/jquery-1.11.1.min.js"></script>
-		<script src="static/js/bootstrap.min.js"></script>
-
-		<style type="text/css">
-			body {
-				padding-top: 70px;
-				padding-bottom: 30px;
-			}
-			.navbar-brand {
-				min-width: 200px;
-				background-color: #f3f3f3;
-			}
-			.viewer {
-				padding-right: 0;
-			}
-			.editor {
-				padding-right: 0;
-			}
-			.editor textarea {
-				font-family: monospace;
-				font-size: 13px;
-				color: black;
-				min-width: 100%;
-				max-width: 100%;
-				height: 70vh;
-			}
-		</style>
-	</head>
-	<body>
-		<noscript>
-			JavaScript not detected; JavaScript is required for editing parts of the application.
-		</noscript>
-		
-		<!-- Fixed navbar -->
-		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-			<div class="container">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="<?php echo $baseurl; ?>"><?php echo $fname; ?></a>
-				</div>
-				<div id="navbar" class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
-						<li <?php if($fname=="home") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp.'/'; ?>">Home</a></li>
-						<li <?php if($fname=="readme") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp.'/readme'; ?>">Readme</a></li>
-						<li <?php if($fname=="examples") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp.'/examples'; ?>">Examples</a></li>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">History <span class="caret"></span></a>
-							<ul class="dropdown-menu" role="menu"><?php	
-								$count = 0;
-								foreach(glob($fpath_history) as $f) {
-									$pos = strrpos($f, $revisonmarker) + strlen($revisonmarker);
-									$n = substr($f, $pos, strrpos($f, '.') - $pos);
-									echo "<li><a href=\"$baseurlapp/$basefname$revisonmarker$n\">rev$n</a></li>";
-									$count++;
-								}
-								if($count == 0)
-									echo '<li class="dropdown-header">This file has no history</li>';
-								?>
-								
-								<li class="divider"></li>
-								<li><a href="<?php echo "$baseurlapp/$basefname"; ?>">Original File</a></li>
-								<!--
-								<li class="divider"></li>
-								<li class="dropdown-header">Nav header</li>
-								<li><a href="#">Separated link</a></li> -->
-							</ul>
-						</li>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Options <span class="caret"></span></a>
-							<ul class="dropdown-menu" role="menu">
-								<li><a id="download_html" href="#">Download as HTML</a></li>
-								<li><a id="download_markdown" href="#">Download as Markdown</a></li>
-								<li class="divider"></li>
-								<li><?php echo ($freadonly ?
-									'<li class="disabled"><a href="#" disabled>This file is already read-only</a></li>' :
-									"<a href=\"$baseurl?mode=readonly\">Make this file read-only</a></li>"); ?>
-								<li><a id="view_log" href="#">View Log</a></li>
-							</ul>
-						</li>
-					</ul>
-					<ul class="nav navbar-nav navbar-right">
-						<li <?php if($fmode=="view") echo 'class="active"'; ?>><a href="<?php echo $baseurl; ?>">View</a></li>
-						<li class="<?php echo ($freadonly ? 'disabled ' : '').($fmode=='edit' ? 'active' : ''); ?>">
-							<a href="<?php if(!$freadonly) echo "$baseurl?mode=edit"; ?>">Edit</a>
-						</li>
-					</ul>
-					<form class="navbar-form navbar-right">
-						<input type="text" class="form-control" placeholder="Filename to open..." name="file" value="<?php echo $fname; ?>">
-					</form>
-				</div><!--/.nav-collapse -->
-			</div>
-		</nav>
-		
-		<!-- Container -->
-		<div class="container">
-			<div class="row">
-				<!-- Markdown -->
-				<div id="wmd-preview-editor" class="viewer col-md-<?php echo ($fmode=="edit" ? "6" : "12"); ?>"></div>
-
-				<!-- Editor -->
-				<?php if ($fmode=="edit") { ?>
-					<div class="editor col-md-6">
-						<form method="post" action="<?php echo $baseurl; ?>" role="form">
-							<div class="form-group">
-								<div id="wmd-button-bar-editor"></div>
-								<textarea id="wmd-input-editor" class="wmd-input" name="form-input-ta"></textarea>
-							</div>
-							
-							<div id="form-group" class="text-right">
-								<button type="submit" class="btn btn-primary" name="mode" value="save_edit">Save</button>
-								<button type="submit" class="btn" name="mode" value="save">Save and View</button>
-							</div>
-						</form>
-					</div>
-					<script type="text/javascript">
-
-					</script><?php
-				} ?>
-				<!-- END Editor -->
-			</div>
-		</div>
-		<script type="text/javascript">
-			var mode = "<?php echo $fmode; ?>";
-			var markdown = <?php echo json_encode($ftext); ?>;
-			
-			window.onload = function() {
-				var converter = new Markdown.Converter();
-				
-				Markdown.Extra.init(converter, {
-					extensions: ["fenced_code_gfm", "tables", "def_list", "attr_list", "footnotes", "smartypants", "newlines", "strikethrough"],
-					table_class: "table table-striped",
-				});
-				
-				// Fills the viewer with HTML
-				$("#wmd-preview-editor").html(converter.makeHtml(markdown));
-				
-				if(mode == 'edit') {
-					// Sets textarea with the text
-					$("#wmd-input-editor").val(markdown);
-					
-					// Creates the editor
-					var editor = new Markdown.Editor(converter, "-editor", {
-						handler: function() {
-							alert("Do you need help? Try http://stackoverflow.com/editing-help");
-						}
-					});
-					editor.run();
-				}
-			}
-		
-			$("#download_html").click(function() {
-				$(this).attr("href", "data:text/plain;charset=utf-8," + encodeURIComponent($("#wmd-preview-editor").html()));
-				$(this).attr("download", "<?php echo $fname; ?>.html");
-				$(this).click();
-			});
-			$("#download_markdown").click(function() {
-				$(this).attr("href", "data:text/plain;charset=utf-8," + encodeURIComponent( mode=="edit" ? $("#wmd-input-editor").val() : markdown));
-				$(this).attr("download", "<?php echo $fname; ?>.md");
-				$(this).click();
-			});
-		
-			$("#view_log").click(function() {
-				alert('<?php echo $message; ?>');
-			});
-		</script>
-	</body>
-</html>
+include('template.php');
 
