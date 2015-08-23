@@ -8,14 +8,19 @@
 # QUERY_STRING="file=readme.txt" php spmdwe.php
 # Source: http://people.w3.org/~dom/archives/2004/07/testing-php-pages-with-query_string/
 
-
-$file_name = "readme";		# file by default
+# Configuration
+$file_name = "home";		# file by default
 $file_mode = "view";		# "view" (implied default); "edit", "save", "save_edit"
 
 define('SAVE_ENABLED', true);			# set to false to disable saving ("demo mode")
 define('REVISION_MARKER', '_rev');		# marker indicating if it is a revision file
 define('FILES_PATH', 'files/%s.md');	# path where the files are stored. Use %s to be replaced with the filename
+define('CSS_START', '<style>');			# start of a section with javascript
+define('CSS_END', '</style>');			# end of a section with javascript
 define('DEFAULT_TEXT', "# Creating a new file\n\nThis file does not exist. You can place your own text here.\n\n**HAVE FUN!**");
+
+
+# Application
 
 # Ensure if the enviroment is correct
 if(empty($_GET))
@@ -54,6 +59,7 @@ if(isset($_REQUEST['mode']))
 # Inicializations
 $message = "";
 $file_readonly = true;
+$file_css = array();
 
 $size_prefix_files_path = stripos(FILES_PATH, '%s');							// Size of the prefix before the filename
 $size_prefix_files_path = ($size_prefix_files_path === false ? strlen(FILES_PATH) : $size_prefix_files_path);
@@ -74,7 +80,7 @@ else {
 	}
 }
 
-# Applicatoin in Demo mode (read-only)
+# Application in Demo mode (read-only)
 if(!SAVE_ENABLED) {
 	$file_mode = "view";
 	$file_readonly = true;
@@ -136,19 +142,34 @@ if($file_contents == false) {
 	$file_mode='edit';
 	$message .= "Cannot open $file_name. Proceeding in edit mode...\\n";
 }
+else {
+	$pos = 0;
+	do {
+		$pos_start = strpos($file_contents, CSS_START, $pos);		# find the next occurrence of CSS_START
+		if($pos_start === false) break;								# if there is no more CSS
+		$pos_end = strpos($file_contents, CSS_END, $pos_start);		# find the end of CSS block
+		if($pos_end !== false) {									# if the end if found, add it to the list
+			$file_css[] = substr($file_contents, $pos_start + strlen(CSS_START), $pos_end - $pos_start - strlen(CSS_START));
+			$pos = $pos_end + strlen(CSS_END);
+		}
+		else
+			$pos = strlen($file_contents) - 1;
+	} while(true);
+}
 
 
-
+# Discover the base URL of the application
 $baseurlapp = dirname($_SERVER['PHP_SELF']);
 if($baseurlapp == '/') $baseurlapp = '';
 $baseurl = "$baseurlapp/$file_name";
 $message .= "Base URL: $baseurl\\n";
 
-# Base path for history files
+# Base path for history files...
 $revision_marker_position = strrpos($file_name, REVISION_MARKER);
 $base_file_name = ($revision_marker_position === false ? $file_name : substr($file_name, 0, $revision_marker_position));
 $file_revisions_path = sprintf(FILES_PATH, $base_file_name.REVISION_MARKER.'??????????');
 
+# ...and list of revision files
 $count = 0;
 $file_revisions = array();
 foreach(glob($file_revisions_path) as $file_revision) {	

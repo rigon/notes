@@ -1,12 +1,15 @@
 <?php
 /**
-
-
+GLOBAL VARIABLES
+================
 $file_name			- filename of the current file
 $file_revisions		- list of revisions to the file
 $file_readonly		- flag indicating if the file is read only
 $file_mode			- mode of the file, view or edit
 $file_contents		- contents of the file
+$file_js			- list of JavaScript snippets
+$baseurlapp         - base URL for the application, i. e. URL without the filename
+$baseurl			- URL with the filename
 
 */
 ?><!DOCTYPE html>
@@ -36,8 +39,7 @@ $file_contents		- contents of the file
 				padding-bottom: 30px;
 			}
 			.navbar-brand {
-				min-width: 200px;
-				background-color: #f3f3f3;
+				font-variant: small-caps;
 			}
 			.viewer {
 			}
@@ -62,6 +64,10 @@ $file_contents		- contents of the file
 				height: 80vh;
 			}
 		</style>
+		<?php
+			foreach($file_css as $js)
+				echo "<style type=\"text/css\">$js</style>";
+		?>
 	</head>
 	<body>
 		<noscript>
