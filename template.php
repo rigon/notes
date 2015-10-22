@@ -32,6 +32,7 @@ $baseurl			- URL with the filename
 		
 		<script src="static/js/jquery-1.11.1.min.js"></script>
 		<script src="static/js/bootstrap.min.js"></script>
+		<script src="static/js/dropzone.js"></script>
 
 		<style type="text/css">
 			body {
@@ -63,6 +64,65 @@ $baseurl			- URL with the filename
 				max-width: 100%;
 				height: 80vh;
 			}
+			
+			.scrollable-menu {
+				height: auto;
+				max-height: 80vh;
+				overflow-x: hidden;
+			}
+
+			
+			.border {
+				border: 1px dotted red;
+			}
+
+    /* Mimic table appearance */
+    div.table {
+      display: table;
+	  margin-bottom: 0px;
+    }
+    div.table .file-row {
+      display: table-row;
+    }
+    div.table .file-row > div {
+      display: table-cell;
+      vertical-align: top;
+      border-top: 1px solid #ddd;
+      padding: 8px 20px;
+    }
+    div.table .file-row:nth-child(odd) {
+      background: #f9f9f9;
+    }
+
+
+
+    /* The total progress gets shown by event listeners */
+    #total-progress {
+      opacity: 0;
+      transition: opacity 0.3s linear;
+    }
+
+    /* Hide the progress bar when finished */
+    #previews .file-row.dz-success .progress {
+      opacity: 0;
+      transition: opacity 0.3s linear;
+    }
+
+    /* Hide the delete button initially */
+    #previews .file-row .delete {
+      display: none;
+    }
+
+    /* Hide the start and cancel buttons and show the delete button */
+
+    #previews .file-row.dz-success .start,
+    #previews .file-row.dz-success .cancel {
+      display: none;
+    }
+    #previews .file-row.dz-success .delete {
+      display: block;
+    }
+			
 		</style>
 		<?php
 			foreach($file_css as $js)
@@ -86,25 +146,133 @@ $baseurl			- URL with the filename
 					</button>
 					<a class="navbar-brand" href="<?php echo $baseurl; ?>"><?php echo $file_name; ?></a>
 				</div>
+				
+				<!-- Navbar -->
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
 						<li <?php if($file_name=="home") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp.'/home'; ?>">Home</a></li>
 						<li <?php if($file_name=="readme") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp.'/readme'; ?>">Readme</a></li>
 						<li <?php if($file_name=="examples") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp.'/examples'; ?>">Examples</a></li>
+						
+						<!-- History -->
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">History <span class="caret"></span></a>
-							<ul class="dropdown-menu" role="menu"><?php
+							<ul class="dropdown-menu scrollable-menu" role="menu">
+								<li><a href="<?php echo "$baseurlapp/$base_file_name"; ?>">Original File</a></li>
+								<li class="divider"></li>
+								<?php
 									if(count($file_revisions) < 1)
 										echo '<li class="dropdown-header">This file has no history</li>';
 									else
 										foreach($file_revisions as $rev)
 											echo "<li><a href=\"$baseurlapp/$rev\">$rev</a></li>";
 								?>
-								
-								<li class="divider"></li>
-								<li><a href="<?php echo "$baseurlapp/$base_file_name"; ?>">Original File</a></li>
 							</ul>
 						</li>
+						
+						<!-- Files -->
+						<li class="dropdown files-dropdown open">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Files <span class="caret"></span></a>
+							<ul id="files" class="dropdown-menu scrollable-menu" role="menu" style="min-width: 700px;">
+								<li style="padding: 0px 20px 5px 20px;">
+									<div style="float: left; padding-right: 15px">
+									<!-- The fileinput-button span is used to style the file input field as button -->
+										<button class="btn btn-success fileinput-button">
+											<i class="glyphicon glyphicon-plus"></i>
+											<span>Add files...</span>
+										</button>
+										<button type="submit" class="btn btn-primary start">
+											<i class="glyphicon glyphicon-upload"></i>
+											<span>Upload</span>
+										</button>
+										<button type="reset" class="btn btn-warning cancel">
+											<i class="glyphicon glyphicon-ban-circle"></i>
+											<span>Cancel all</span>
+										</button>
+									</div>
+
+									<!-- The global file processing state -->
+									<div class="fileupload-process">
+										<div id="total-progress" class="progress progress-striped active" style="height: 34px; margin-bottom: 0px;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+											<div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+										</div>
+									</div>
+								</li>
+								
+			
+								<li>
+									<span class="dropdown-header files-noupload">There is no files to upload</span>
+
+									<div class="table table-striped files" id="previews">
+										<div class="file-row">
+											<!-- This is used as the file preview template -->
+											
+											<div class="media">
+												<div class="media-body" style="width: 100%">
+													<h4 class="media-heading name" data-dz-name></h4>
+
+													<span class="size label label-info" style="float: left; margin-right: 15px; height: 30px; min-width: 50px; padding: 9px 6px 9px 6px;" data-dz-size></span>
+													
+													<div style="float: left; margin-right: 15px">
+														<button class="btn btn-primary btn-sm start" title="Start">
+															<i class="glyphicon glyphicon-upload"></i>
+														</button>
+														<button data-dz-remove class="btn btn-warning btn-sm cancel" title="Cancel">
+															<i class="glyphicon glyphicon-ban-circle"></i>
+														</button>
+														<button data-dz-remove class="btn btn-danger btn-sm delete" title="Delete">
+															<i class="glyphicon glyphicon-trash"></i>
+														</button>
+													</div>
+													
+													<div class="progress progress-striped active" style="height: 30px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+														<div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
+													</div>
+														
+													
+												</div>
+												<div class="media-right">
+													<img class="media-object" data-dz-thumbnail />
+												</div>
+											</div>
+											
+											
+											<!--<div>
+												<span class="preview"><img data-dz-thumbnail /></span>
+											</div>
+											<div>
+												<p class="name" data-dz-name></p>
+												<strong class="error text-danger" data-dz-errormessage></strong>
+											</div>
+											<div>
+												<p class="size" data-dz-size></p>
+												<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+													<div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+												</div>
+											</div>
+											<div>
+												<button class="btn btn-primary start">
+													<i class="glyphicon glyphicon-upload"></i>
+													<span>Start</span>
+												</button>
+												<button data-dz-remove class="btn btn-warning cancel">
+													<i class="glyphicon glyphicon-ban-circle"></i>
+													<span>Cancel</span>
+												</button>
+												<button data-dz-remove class="btn btn-danger delete">
+													<i class="glyphicon glyphicon-trash"></i>
+													<span>Delete</span>
+												</button>
+											</div>-->
+										</div>
+									</div>
+								</li>
+								<li class="divider"></li>
+								<li class="dropdown-header">There is no files attached</li>
+							</ul>
+						</li>
+						
+						<!-- Options -->
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Options <span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
@@ -210,6 +378,67 @@ $baseurl			- URL with the filename
 		
 			$("#view_log").click(function() {
 				alert('<?php echo $message; ?>');
+			});
+		</script>
+		
+		<script type="text/javascript">
+			// Disable auto discover for all elements:
+			Dropzone.autoDiscover = false;
+			// Get the template HTML and remove it from the doument
+			var previewTemplate = $("#previews").html();
+			$("#previews").empty();
+
+			var dropzone = new Dropzone(document.documentElement, { // Make the whole document a dropzone
+				url: "upload.php", // Set the url
+				thumbnailWidth: 80,
+				thumbnailHeight: 80,
+				parallelUploads: 30,
+				previewTemplate: previewTemplate,
+				autoQueue: false, // Make sure the files aren't queued until manually added
+				previewsContainer: "#previews", // Define the container to display the previews
+				clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
+			});
+
+			dropzone.on("addedfile", function(file) {
+				// Hookup the start button
+				file.previewElement.querySelector(".start").onclick = function() { dropzone.enqueueFile(file); };
+				$('.files-dropdown').addClass('open');
+				$("#files .files-noupload").hide();
+			});
+			
+			dropzone.on("removedfile", function(file) {
+				if(this.getQueuedFiles().length + this.getUploadingFiles().length + this.getRejectedFiles().length < 1)
+					$("#files .files-noupload").show();
+			});
+
+			// Update the total progress bar
+			dropzone.on("totaluploadprogress", function(progress) {
+				document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
+			});
+
+			dropzone.on("sending", function(file) {
+				// Show the total progress bar when upload starts
+				document.querySelector("#total-progress").style.opacity = "1";
+				// And disable the start button
+				file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
+			});
+
+			// Hide the total progress bar when nothing's uploading anymore
+			dropzone.on("queuecomplete", function(progress) {
+				document.querySelector("#total-progress").style.opacity = "0";
+			});
+
+			// Setup the buttons for all transfers
+			// The "add files" button doesn't need to be setup because the config
+			// `clickable` has already been specified.
+			$("#files .start").click(function() {
+				dropzone.enqueueFiles(dropzone.getFilesWithStatus(Dropzone.ADDED));
+			});
+			$("#files .cancel").click(function() {
+				dropzone.removeAllFiles(true);
+			});
+			$("#files").click(function (e) {
+				e.stopPropagation();
 			});
 		</script>
 	</body>
