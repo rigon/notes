@@ -1,1 +1,0 @@
-../spmdwe-readme.md
