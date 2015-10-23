@@ -14,9 +14,9 @@ $file_mode = "view";		# "view" (implied default); "edit", "save", "save_edit"
 
 define('SAVE_ENABLED', true);			# set to false to disable saving ("demo mode")
 define('REVISION_MARKER', '_rev');		# marker indicating if it is a revision file
-define('FILES_PATH', 'files/%s.md');	# path where the files are stored. Use %s to be replaced with the filename
-define('CSS_START', '<style>');			# start of a section with javascript
-define('CSS_END', '</style>');			# end of a section with javascript
+define('FILES_PATH', 'files/%s/');		# path where the files are stored. Use %s to be replaced with the filename
+define('CSS_START', '<style>');			# start of a CSS section
+define('CSS_END', '</style>');			# end of a CSS section
 define('DEFAULT_TEXT', "# Creating a new file\n\nThis file does not exist. You can place your own text here.\n\n**HAVE FUN!**");
 
 
@@ -38,7 +38,7 @@ if(isset($_REQUEST['file'])) {
 
 # Google specific info for crawling
 if($file_name == "google53c7003e2135dc17.html")
-	die("google-site-verification: google53c7003e2135dc17.html");
+	die('google-site-verification: google53c7003e2135dc17.html');
 if($file_name == "sitemap.xml") 
 	die('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 		<url><loc>http://www.spmdwe.tk/home</loc></url>
@@ -49,7 +49,11 @@ if($file_name == "sitemap.xml")
 
 
 # Default path for files
-$file_path = sprintf(FILES_PATH, $file_name);
+$revision_marker_position = strrpos($file_name, REVISION_MARKER);
+$base_file_name = ($revision_marker_position === false ? $file_name : substr($file_name, 0, $revision_marker_position));
+$file_path = sprintf(FILES_PATH, $base_file_name);
+$file_path_md = "$file_path$file_name.md";
+
 
 # Gets the mode
 if(isset($_REQUEST['mode']))
@@ -61,19 +65,19 @@ $message = "";
 $file_readonly = true;
 $file_css = array();
 
-$size_prefix_files_path = stripos(FILES_PATH, '%s');							// Size of the prefix before the filename
-$size_prefix_files_path = ($size_prefix_files_path === false ? strlen(FILES_PATH) : $size_prefix_files_path);
-$size_suffix_files_path = strlen(FILES_PATH) - $size_prefix_files_path - 2;		// Size of the suffix after the filename
+//$size_prefix_files_path = stripos(FILES_PATH, '%s');							// Size of the prefix before the filename
+//$size_prefix_files_path = ($size_prefix_files_path === false ? strlen(FILES_PATH) : $size_prefix_files_path);
+//$size_suffix_files_path = strlen(FILES_PATH) - $size_prefix_files_path - 2;		// Size of the suffix after the filename
 
 
 # If the specified file doesn't exist
-if(!file_exists($file_path)) {
+if(!file_exists($file_path_md)) {
 	$message .= "File $file_name not found. Proceeding to edit\\n";
 	$file_readonly = false;
 }
 else {
 	# Discover if the file is read only
-	$file_readonly = !is_writable($file_path);
+	$file_readonly = !is_writable($file_path_md);
 	if($file_readonly) {
 		$file_mode = "view";
 		$message .= "File in read only mode\\n";
@@ -92,31 +96,32 @@ if(!SAVE_ENABLED) {
 if($file_mode == "readonly") {
 	$file_mode = "view";
 	$file_readonly = true;
-	$result = chmod($file_path, 0444);
+	$result = chmod($file_path_md, 0444);
 	$message .= ($result ? 'Successfully' : 'Unsuccessfully').' changed file to read-only mode\\n';
 }
 
 # Save the file and view or continue editing
 else if(($file_mode == "save" or $file_mode == "save_edit") and !$file_readonly) {
+	// Create a new folder for the page
+	if(!file_exists($file_path))
+		mkdir($file_path);
 
 	// Revision file is only created if previous file exists
-	if(file_exists($file_path)) {
+	if(file_exists($file_path_md)) {
 		// calculate backup filename
-		$time = time();
-	
-		$base_file_name = substr($file_path, 0, strlen($file_path) - $size_suffix_files_path);
-		$suffix_file_name = substr($file_path, -$size_suffix_files_path);
-		$revision_file_path = $base_file_name . REVISION_MARKER . $time . $suffix_file_name;
+		date_default_timezone_set('UTC');
+		$time = date('Ymd_His');
+		$revision_file_path = $file_path . $base_file_name . REVISION_MARKER . $time . ".md";
 
 		//save backup as a revision file
-		$result = rename($file_path, $revision_file_path);
+		$result = rename($file_path_md, $revision_file_path);
 		chmod($revision_file_path, 0444);
-		$message .= ($result ? "Revision saved to $revision_file_path.\\n" : "Could not create revision from $file_path to $revision_file_path!\\n");
+		$message .= ($result ? "Revision saved to $revision_file_path.\\n" : "Could not create revision from $file_path_md to $revision_file_path!\\n");
 	}
 
 	// save new file (textarea form-input-ta) to original filename
 	$new_content = $_REQUEST['form-input-ta'];
-	if (file_put_contents($file_path, $new_content))
+	if (file_put_contents($file_path_md, $new_content))
 		$message .= "Saved new content to $file_name.\\n";
 	
 	
@@ -129,8 +134,7 @@ else if(($file_mode == "save" or $file_mode == "save_edit") and !$file_readonly)
 
 # Upload a new file
 else if(($file_mode == "upload") and !$file_readonly) {
-	$uploaddir = 'files/';
-	$uploadfile = $uploaddir . basename($_FILES['file']['name']);
+	$uploadfile = $file_path . basename($_FILES['file']['name']);
 
 	if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
 		echo "File is valid, and was successfully uploaded.\n";
@@ -150,12 +154,12 @@ $message .= "Opening $file_name in $file_mode mode\\n";
 
 // check if the file exists
 $file_contents = false;
-if(file_exists($file_path))
-	$file_contents = file_get_contents($file_path);
+if(file_exists($file_path_md))
+	$file_contents = file_get_contents($file_path_md);
 
 if($file_contents == false) {
 	$file_contents = DEFAULT_TEXT;
-	$file_mode='edit';
+	$file_mode = 'edit';
 	$message .= "Cannot open $file_name. Proceeding in edit mode...\\n";
 }
 else {
@@ -181,15 +185,16 @@ $baseurl = "$baseurlapp/$file_name";
 $message .= "Base URL: $baseurl\\n";
 
 # Base path for history files...
-$revision_marker_position = strrpos($file_name, REVISION_MARKER);
-$base_file_name = ($revision_marker_position === false ? $file_name : substr($file_name, 0, $revision_marker_position));
-$file_revisions_path = sprintf(FILES_PATH, $base_file_name.REVISION_MARKER.'??????????');
+//$revision_marker_position = strrpos($file_name, REVISION_MARKER);
+//$base_file_name = ($revision_marker_position === false ? $file_name : substr($file_name, 0, $revision_marker_position));
+$file_revisions_path = $file_path.$base_file_name.REVISION_MARKER.'????????_??????.md';
+$message .= "file_revisions_path: $file_revisions_path\\n";
 
 # ...and list of revision files
 $count = 0;
 $file_revisions = array();
 foreach(glob($file_revisions_path) as $file_revision) {	
-	$file_revisions[$count] = substr($file_revision, $size_prefix_files_path, -$size_suffix_files_path);
+	$file_revisions[$count] = substr($file_revision, strlen($file_path), -strlen('.md'));
 	$count++;
 }
 
