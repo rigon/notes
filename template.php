@@ -7,7 +7,7 @@ $file_revisions		- list of revisions to the file
 $file_readonly		- flag indicating if the file is read only
 $file_mode			- mode of the file, view or edit
 $file_contents		- contents of the file
-$file_js			- list of JavaScript snippets
+$file_css			- list of CSS snippets
 $baseurlapp         - base URL for the application, i. e. URL without the filename
 $baseurl			- URL with the filename
 
@@ -144,7 +144,7 @@ $baseurl			- URL with the filename
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="<?php echo $baseurl; ?>"><?php echo $file_name; ?></a>
+					<a class="navbar-brand" href="<?php echo $baseurl; ?>"><?php //echo $file_name; ?>Spmdwe</a>
 				</div>
 				
 				<!-- Navbar -->
@@ -158,7 +158,7 @@ $baseurl			- URL with the filename
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">History <span class="caret"></span></a>
 							<ul class="dropdown-menu scrollable-menu" role="menu">
-								<li><a href="<?php echo "$baseurlapp/$base_file_name"; ?>">Original File</a></li>
+								<li><a href="<?php echo "$baseurlapp/$base_file_name"; ?>">Current File</a></li>
 								<li class="divider"></li>
 								<?php
 									if(count($file_revisions) < 1)
@@ -171,7 +171,7 @@ $baseurl			- URL with the filename
 						</li>
 						
 						<!-- Files -->
-						<li class="dropdown files-dropdown open">
+						<li class="dropdown files-dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Files <span class="caret"></span></a>
 							<ul id="files" class="dropdown-menu scrollable-menu" role="menu" style="min-width: 700px;">
 								<li style="padding: 0px 20px 5px 20px;">
