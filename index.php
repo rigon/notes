@@ -127,6 +127,22 @@ else if(($file_mode == "save" or $file_mode == "save_edit") and !$file_readonly)
 		$file_mode = 'edit';
 }
 
+# Upload a new file
+else if(($file_mode == "upload") and !$file_readonly) {
+	$uploaddir = 'files/';
+	$uploadfile = $uploaddir . basename($_FILES['file']['name']);
+
+	if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
+		echo "File is valid, and was successfully uploaded.\n";
+	} else {
+		echo "Possible file upload attack!\n";
+	}
+
+	echo 'Here is some more debugging info:';
+	print_r($_FILES);
+	
+	exit();
+}
 
 
 # Gets the file contents
