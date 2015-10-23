@@ -388,15 +388,15 @@ $baseurl			- URL with the filename
 			var previewTemplate = $("#previews").html();
 			$("#previews").empty();
 
-			var dropzone = new Dropzone(document.documentElement, { // Make the whole document a dropzone
-				url: "upload.php", // Set the url
+			var dropzone = new Dropzone(document.documentElement, {		// Make the whole document a dropzone
+				url: "<?php echo "$baseurlapp/$base_file_name"; ?>",	// Set the url
 				thumbnailWidth: 80,
 				thumbnailHeight: 80,
 				parallelUploads: 30,
 				previewTemplate: previewTemplate,
-				autoQueue: false, // Make sure the files aren't queued until manually added
-				previewsContainer: "#previews", // Define the container to display the previews
-				clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
+				autoQueue: false,				// Make sure the files aren't queued until manually added
+				previewsContainer: "#previews",	// Define the container to display the previews
+				clickable: ".fileinput-button",	// Define the element that should be used as click trigger to select files.
 			});
 
 			dropzone.on("addedfile", function(file) {
@@ -416,7 +416,8 @@ $baseurl			- URL with the filename
 				document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
 			});
 
-			dropzone.on("sending", function(file) {
+			dropzone.on("sending", function(file, xhr, formData) {
+				formData.append("mode", "upload");
 				// Show the total progress bar when upload starts
 				document.querySelector("#total-progress").style.opacity = "1";
 				// And disable the start button
