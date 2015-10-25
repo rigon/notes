@@ -8,6 +8,7 @@ $file_readonly		- flag indicating if the file is read only
 $file_mode			- mode of the file, view or edit
 $file_contents		- contents of the file
 $file_css			- list of CSS snippets
+$list_files			- list of attached files
 $baseurlapp         - base URL for the application, i. e. URL without the filename
 $baseurl			- URL with the filename
 
@@ -229,7 +230,7 @@ $baseurl			- URL with the filename
 														<div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
 													</div>
 														
-													
+													<strong class="error text-danger" data-dz-errormessage></strong>
 												</div>
 												<div class="media-right">
 													<img class="media-object" data-dz-thumbnail />
@@ -268,7 +269,13 @@ $baseurl			- URL with the filename
 									</div>
 								</li>
 								<li class="divider"></li>
-								<li class="dropdown-header">There is no files attached</li>
+								<?php
+									if(count($list_files) < 1)
+										echo '<li class="dropdown-header">There is no files attached</li>';
+									else
+										foreach($list_files as $list_file)
+											echo "<li><a href=\"$baseurlapp/$list_file\">$list_file</a></li>";
+								?>
 							</ul>
 						</li>
 						
@@ -390,6 +397,7 @@ $baseurl			- URL with the filename
 
 			var dropzone = new Dropzone(document.documentElement, {		// Make the whole document a dropzone
 				url: "<?php echo "$baseurlapp/$base_file_name"; ?>",	// Set the url
+				maxFilesize: <?php echo max_upload(); ?>,
 				thumbnailWidth: 80,
 				thumbnailHeight: 80,
 				parallelUploads: 30,
