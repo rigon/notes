@@ -188,7 +188,8 @@ $message .= "Base URL: $baseurl\\n";
 //$revision_marker_position = strrpos($file_name, REVISION_MARKER);
 //$base_file_name = ($revision_marker_position === false ? $file_name : substr($file_name, 0, $revision_marker_position));
 $file_revisions_path = $file_path.$base_file_name.REVISION_MARKER.'????????_??????.md';
-$message .= "file_revisions_path: $file_revisions_path\\n";
+$list_files_path = "$file_path*";
+$message .= "list_files_path: $list_files_path\\n";
 
 # ...and list of revision files
 $count = 0;
@@ -196,6 +197,27 @@ $file_revisions = array();
 foreach(glob($file_revisions_path) as $file_revision) {	
 	$file_revisions[$count] = substr($file_revision, strlen($file_path), -strlen('.md'));
 	$count++;
+}
+
+# ...and list of files
+$count = 0;
+$list_files = array();
+foreach(glob($list_files_path) as $list_file) {	
+	$list_files_name = substr($list_file, strlen($file_path));
+	if(substr($list_files_name, 0, strlen($file_name)) !== $file_name) {	// Exclude main file and revisions
+		$list_files[$count] = $list_files_name;
+		$count++;
+	}
+}
+
+function max_upload() {
+	// Determines the maximum upload size allowed
+	$max_upload = (int)(ini_get('upload_max_filesize'));
+	$max_post = (int)(ini_get('post_max_size'));
+	$memory_limit = (int)(ini_get('memory_limit'));
+	$upload_mb = min($max_upload, $max_post, $memory_limit);
+
+	return $upload_mb;
 }
 
 // for unicode output: (http://stackoverflow.com/questions/713293)
