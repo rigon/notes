@@ -9,6 +9,7 @@ $file_mode			- mode of the file, view or edit
 $file_contents		- contents of the file
 $file_css			- list of CSS snippets
 $list_files			- list of attached files
+$url_files			- URL to the files
 $baseurlapp         - base URL for the application, i. e. URL without the filename
 $baseurl			- URL with the filename
 
@@ -20,20 +21,20 @@ $baseurl			- URL with the filename
 		
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		
-		<link rel="stylesheet" type="text/css" href="static/css/pagedown.css" />
-		<link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo $baseurlapp; ?>/static/css/pagedown.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo $baseurlapp; ?>/static/css/bootstrap.min.css" />
 		
-		<script type="text/javascript" src="static/js/Markdown.Converter.js"></script>
-		<script type="text/javascript" src="static/js/Markdown.Sanitizer.js"></script>
-		<script type="text/javascript" src="static/js/Markdown.Editor.js"></script>
-		<script type="text/javascript" src="static/js/Markdown.Extra.js"></script>
-		<script type="text/javascript" src="static/js/MathJax-edit.js"></script>
+		<script type="text/javascript" src="<?php echo $baseurlapp; ?>/static/js/Markdown.Converter.js"></script>
+		<script type="text/javascript" src="<?php echo $baseurlapp; ?>/static/js/Markdown.Sanitizer.js"></script>
+		<script type="text/javascript" src="<?php echo $baseurlapp; ?>/static/js/Markdown.Editor.js"></script>
+		<script type="text/javascript" src="<?php echo $baseurlapp; ?>/static/js/Markdown.Extra.js"></script>
+		<script type="text/javascript" src="<?php echo $baseurlapp; ?>/static/js/MathJax-edit.js"></script>
 		<!-- <script type="text/javascript" src="static/js/call-mathjax-edit.js"></script> -->
 
 		
-		<script src="static/js/jquery-1.11.1.min.js"></script>
-		<script src="static/js/bootstrap.min.js"></script>
-		<script src="static/js/dropzone.js"></script>
+		<script src="<?php echo $baseurlapp; ?>/static/js/jquery-1.11.1.min.js"></script>
+		<script src="<?php echo $baseurlapp; ?>/static/js/bootstrap.min.js"></script>
+		<script src="<?php echo $baseurlapp; ?>/static/js/dropzone.js"></script>
 
 		<style type="text/css">
 			body {
@@ -274,7 +275,7 @@ $baseurl			- URL with the filename
 										echo '<li class="dropdown-header">There is no files attached</li>';
 									else
 										foreach($list_files as $list_file)
-											echo "<li><a href=\"$baseurlapp/$list_file\">$list_file</a></li>";
+											echo "<li><a href=\"$url_files$list_file\">$list_file</a></li>";
 								?>
 							</ul>
 						</li>

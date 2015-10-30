@@ -65,9 +65,14 @@ $message = "";
 $file_readonly = true;
 $file_css = array();
 
-//$size_prefix_files_path = stripos(FILES_PATH, '%s');							// Size of the prefix before the filename
-//$size_prefix_files_path = ($size_prefix_files_path === false ? strlen(FILES_PATH) : $size_prefix_files_path);
-//$size_suffix_files_path = strlen(FILES_PATH) - $size_prefix_files_path - 2;		// Size of the suffix after the filename
+
+# Discover the base URL of the application
+$baseurlapp = dirname($_SERVER['PHP_SELF']);
+if($baseurlapp == '/') $baseurlapp = '';
+$baseurl = "$baseurlapp/$file_name";
+$message = "Base URL: $baseurl\\n";
+
+$url_files = sprintf($baseurlapp.'/'.FILES_PATH, $base_file_name);
 
 
 # If the specified file doesn't exist
@@ -178,15 +183,7 @@ else {
 }
 
 
-# Discover the base URL of the application
-$baseurlapp = dirname($_SERVER['PHP_SELF']);
-if($baseurlapp == '/') $baseurlapp = '';
-$baseurl = "$baseurlapp/$file_name";
-$message .= "Base URL: $baseurl\\n";
-
 # Base path for history files...
-//$revision_marker_position = strrpos($file_name, REVISION_MARKER);
-//$base_file_name = ($revision_marker_position === false ? $file_name : substr($file_name, 0, $revision_marker_position));
 $file_revisions_path = $file_path.$base_file_name.REVISION_MARKER.'????????_??????.md';
 $list_files_path = "$file_path*";
 $message .= "list_files_path: $list_files_path\\n";
@@ -204,7 +201,7 @@ $count = 0;
 $list_files = array();
 foreach(glob($list_files_path) as $list_file) {	
 	$list_files_name = substr($list_file, strlen($file_path));
-	if(substr($list_files_name, 0, strlen($file_name)) !== $file_name) {	// Exclude main file and revisions
+	if(substr($list_files_name, 0, strlen($base_file_name)) !== $base_file_name) {	// Exclude main file and revisions
 		$list_files[$count] = $list_files_name;
 		$count++;
 	}
