@@ -1,0 +1,13 @@
+RewriteEngine on
+
+RewriteCond %{REQUEST_URI} !^/notes/static
+RewriteCond %{REQUEST_URI} !^/notes/files/[^/]+/[^/]+\.[^/]+
+
+RewriteRule ^([^/]*)$ index.php?file=$1 [L,QSA]
+
+
+RewriteCond %{REQUEST_URI} !^/notes/static
+RewriteCond %{REQUEST_URI} !^/notes/files/[^/]+/[^/]+\.[^/]+
+
+RewriteRule .* "-" [F]
+
