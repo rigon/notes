@@ -101,8 +101,13 @@ if(!SAVE_ENABLED) {
 if($file_mode == "readonly") {
 	$file_mode = "view";
 	$file_readonly = true;
-	$result = chmod($file_path_md, 0444);
-	$message .= ($result ? 'Successfully' : 'Unsuccessfully').' changed file to read-only mode\\n';
+	
+	foreach(glob("$file_path*") as $file_path_item) {
+		$result = chmod($file_path_item, 0444);
+		$message .= $file_path_item.' '.($result ? 'successfully' : 'unsuccessfully').' changed to read-only mode\\n';
+	}
+	$result = chmod($file_path, 0555);
+	$message .= $file_path.' '.($result ? 'successfully' : 'unsuccessfully').' changed to read-only mode\\n';
 }
 
 # Save the file and view or continue editing
@@ -162,10 +167,12 @@ $file_contents = false;
 if(file_exists($file_path_md))
 	$file_contents = file_get_contents($file_path_md);
 
+#else die("NOT EXISTS $file_path_md");
+
 if($file_contents == false) {
 	$file_contents = DEFAULT_TEXT;
 	$file_mode = 'edit';
-	$message .= "Cannot open $file_name. Proceeding in edit mode...\\n";
+	$message .= "Cannot open $file_path_md. Proceeding in edit mode...\\n";
 }
 else {
 	$pos = 0;
@@ -183,12 +190,11 @@ else {
 }
 
 
-# Base path for history files...
+# Base path for history files
 $file_revisions_path = $file_path.$base_file_name.REVISION_MARKER.'????????_??????.md';
 $list_files_path = "$file_path*";
-$message .= "list_files_path: $list_files_path\\n";
 
-# ...and list of revision files
+# List of revision files
 $count = 0;
 $file_revisions = array();
 foreach(glob($file_revisions_path) as $file_revision) {	
@@ -196,7 +202,7 @@ foreach(glob($file_revisions_path) as $file_revision) {
 	$count++;
 }
 
-# ...and list of files
+# List of files
 $count = 0;
 $list_files = array();
 foreach(glob($list_files_path) as $list_file) {	
