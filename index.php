@@ -205,10 +205,10 @@ foreach(glob($file_revisions_path) as $file_revision) {
 # List of files
 $count = 0;
 $list_files = array();
-foreach(glob($list_files_path) as $list_file) {	
-	$list_files_name = substr($list_file, strlen($file_path));
-	if(substr($list_files_name, 0, strlen($base_file_name)) !== $base_file_name) {	// Exclude main file and revisions
-		$list_files[$count] = $list_files_name;
+foreach(glob($list_files_path) as $list_file) {
+	$list_file_name = substr($list_file, strlen($file_path));
+	if($list_file_name !== $file_name.".md" and substr($list_file_name, 0, strlen($base_file_name.REVISION_MARKER)) !== $base_file_name.REVISION_MARKER) {	// Exclude main file and revisions
+		$list_files[$count] = $list_file_name;
 		$count++;
 	}
 }
