@@ -275,7 +275,7 @@ $baseurl			- URL with the filename
 										echo '<li class="dropdown-header">There is no files attached</li>';
 									else
 										foreach($list_files as $list_file)
-											echo "<li><a href=\"$url_files$list_file\">$list_file</a></li>";
+											echo "<li><a href=\"$url_files$list_file\" target=\"_blank\">$list_file</a></li>";
 								?>
 							</ul>
 						</li>
