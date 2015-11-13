@@ -77,6 +77,10 @@ $baseurl			- URL with the filename
 			.border {
 				border: 1px dotted red;
 			}
+			
+			#container img {
+				max-width: 100%;
+			}
 
     /* Mimic table appearance */
     div.table {
