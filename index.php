@@ -212,6 +212,7 @@ foreach(glob($list_files_path) as $list_file) {
 		$count++;
 	}
 }
+$list_files = array_reverse($list_files);
 
 function max_upload() {
 	// Determines the maximum upload size allowed
