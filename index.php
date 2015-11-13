@@ -201,6 +201,7 @@ foreach(glob($file_revisions_path) as $file_revision) {
 	$file_revisions[$count] = substr($file_revision, strlen($file_path), -strlen('.md'));
 	$count++;
 }
+$file_revisions = array_reverse($file_revisions);
 
 # List of files
 $count = 0;
@@ -212,7 +213,6 @@ foreach(glob($list_files_path) as $list_file) {
 		$count++;
 	}
 }
-$list_files = array_reverse($list_files);
 
 function max_upload() {
 	// Determines the maximum upload size allowed
