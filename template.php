@@ -78,7 +78,7 @@ $baseurl			- URL with the filename
 				border: 1px dotted red;
 			}
 			
-			#container img {
+			.container img {
 				max-width: 100%;
 			}
 
