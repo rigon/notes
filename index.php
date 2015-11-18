@@ -164,12 +164,9 @@ else if($file_mode == "template_save") {
 	$result = file_put_contents("files/template.php", $template);
 	
 	if($result === FALSE)
-		echo 'Error saving the template...';
-	else
-		echo 'Template saved!';
-		
-	echo "\n\n$template";
-	exit();
+		die('Error saving the template...');
+	
+	exit('Template saved!');
 }
 
 
@@ -254,7 +251,9 @@ header('Content-Type: text/html; charset=utf-8');
 //header('Cache-Control: post-check=0, pre-check=0', FALSE);
 //header('Pragma: no-cache');
 
-if(isset($_REQUEST['preview']))
+if(isset($_REQUEST['template_preview']) and isset($_REQUEST['template']))
+	eval("?>".$_REQUEST['template']."<?php ");
+else if(isset($_REQUEST['preview']))
 	include('files/template.php');
 else
 	include('template.php');
