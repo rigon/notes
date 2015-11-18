@@ -10,7 +10,7 @@ $file_contents		- contents of the file
 $file_css			- list of CSS snippets
 $list_files			- list of attached files
 $url_files			- URL to the files
-$baseurlapp         - base URL for the application, i. e. URL without the filename
+$baseurlapp			- base URL for the application, i. e. URL without the filename
 $baseurl			- URL with the filename
 
 */
@@ -131,8 +131,8 @@ $baseurl			- URL with the filename
 			
 		</style>
 		<?php
-			foreach($file_css as $js)
-				echo "<style type=\"text/css\">$js</style>";
+			foreach($file_css as $css)
+				echo "<style type=\"text/css\">$css</style>";
 		?>
 	</head>
 	<body>
