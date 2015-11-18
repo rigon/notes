@@ -359,8 +359,8 @@ $baseurl			- URL with the filename
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="button" id="template_save" class="btn btn-default">Save</button>
-						<button type="button" id="template_saveprev" class="btn btn-primary">Save and Preview</button>
+						<button type="button" id="template_save" class="btn btn-primary">Save</button>
+						<button type="button" id="template_preview" class="btn btn-info">Preview</button>
 					</div>
 				</div>
 			</div>
@@ -415,23 +415,27 @@ $baseurl			- URL with the filename
 				$(this).click();
 			});
 			
-			$('#template_edit_button').click(function() {
+			$("#template_edit_button").click(function() {
 				$("#template_edit").modal('show');
 			});
 			
-			$('#template_save').click(function() {
+			$("#template_save").click(function() {
 				$.post("<?php echo "$baseurlapp/$base_file_name"; ?>?mode=template_save", {
 					template: $('#template_edit_textarea').val()
 				}).done(function(data) {
+					alert(data);
 					$("#template_edit").modal('hide');
 				});
 			});
 			
-			$('#template_saveprev').click(function() {
-				$.post("<?php echo "$baseurlapp/$base_file_name"; ?>?mode=template_save", {
-					template: $('#template_edit_textarea').val()
+			$("#template_preview").click(function() {
+				$.post("<?php echo "$baseurlapp/$base_file_name"; ?>?template_preview", {
+					template: $("#template_edit_textarea").val()
 				}).done(function(data) {
-					window.open("<?php echo "$baseurlapp/$base_file_name"; ?>?preview", '_blank');
+					var previewWindow = window.open("", "spmdwe_preview_template");
+					previewWindow.document.open();
+					previewWindow.document.write(data);
+					previewWindow.document.close();
 				});
 			});
 		
