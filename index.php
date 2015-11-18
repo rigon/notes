@@ -143,7 +143,7 @@ else if(($file_mode == "save" or $file_mode == "save_edit") and !$file_readonly)
 }
 
 # Upload a new file
-else if(($file_mode == "upload") and !$file_readonly) {
+else if($file_mode == "upload" and !$file_readonly) {
 	$uploadfile = $file_path . basename($_FILES['file']['name']);
 
 	if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
@@ -157,6 +157,22 @@ else if(($file_mode == "upload") and !$file_readonly) {
 	
 	exit();
 }
+
+# Save template
+else if($file_mode == "template_save") {
+	$template = $_REQUEST['template'];
+	$result = file_put_contents("files/template.php", $template);
+	
+	if($result === FALSE)
+		echo 'Error saving the template...';
+	else
+		echo 'Template saved!';
+		
+	echo "\n\n$template";
+	exit();
+}
+
+
 
 
 # Gets the file contents
@@ -213,11 +229,6 @@ foreach(glob($list_files_path) as $list_file) {
 	}
 }
 
-
-# Get template file
-$template_file = htmlspecialchars(file_get_contents(
-	file_exists("files/template.php") ? "files/template.php" : "template.php"));
-
 function max_upload() {
 	// Determines the maximum upload size allowed
 	$max_upload = (int)(ini_get('upload_max_filesize'));
@@ -228,6 +239,12 @@ function max_upload() {
 	return $upload_mb;
 }
 
+# Get template file
+$template_file = htmlspecialchars(file_get_contents(
+	file_exists("files/template.php") ? "files/template.php" : "template.php"));
+	
+
+
 // for unicode output: (http://stackoverflow.com/questions/713293)
 header('Content-Type: text/html; charset=utf-8');
 // to disable caching and force a reload each time page is read:
@@ -237,5 +254,8 @@ header('Content-Type: text/html; charset=utf-8');
 //header('Cache-Control: post-check=0, pre-check=0', FALSE);
 //header('Pragma: no-cache');
 
-include('template.php');
+if(isset($_REQUEST['preview']))
+	include('files/template.php');
+else
+	include('template.php');
 

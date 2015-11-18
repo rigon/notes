@@ -291,7 +291,7 @@ $baseurl			- URL with the filename
 								<li><a id="download_html" href="#">Download as HTML</a></li>
 								<li><a id="download_markdown" href="#">Download as Markdown</a></li>
 								<li class="divider"></li>
-								<li><a id="edit_template" href="#">Edit template</a></li>
+								<li><a id="template_edit_button" href="#">Edit template</a></li>
 								<li><?php echo ($file_readonly ?
 									'<li class="disabled"><a href="#" disabled>This file is already read-only</a></li>' :
 									"<a href=\"$baseurl?mode=readonly\">Make this file read-only</a></li>"); ?>
@@ -345,7 +345,7 @@ $baseurl			- URL with the filename
 		
 		
 		<!-- Template editor -->
-		<div id="edit_template_form" class="modal fade" tabindex="-1" role="document">
+		<div id="template_edit" class="modal fade" tabindex="-1" role="document">
 			<div class="modal-dialog" role="document" style="width: 80%;">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -354,13 +354,13 @@ $baseurl			- URL with the filename
 					</div>
 					<div class="modal-body">
 						<div class="form-group">
-							<textarea class="form-control" id="edit_template_textarea" style="height: 70vh; max-width: 100%; min-width: 100%;"><?php echo $template_file; ?></textarea>
+							<textarea class="form-control" id="template_edit_textarea" style="height: 70vh; max-width: 100%; min-width: 100%;"><?php echo $template_file; ?></textarea>
 						</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-error">Save</button>
-						<button type="button" class="btn btn-primary">Save and Preview</button>
+						<button type="button" id="template_save" class="btn btn-default">Save</button>
+						<button type="button" id="template_saveprev" class="btn btn-primary">Save and Preview</button>
 					</div>
 				</div>
 			</div>
@@ -415,13 +415,25 @@ $baseurl			- URL with the filename
 				$(this).click();
 			});
 			
-			$('#edit_template').click(function() {
-				$("#edit_template_form").modal('show');
-			})
+			$('#template_edit_button').click(function() {
+				$("#template_edit").modal('show');
+			});
 			
-			//modal('shown.bs.modal', function () {
-			//	$('#myInput').focus()
-			//});
+			$('#template_save').click(function() {
+				$.post("<?php echo "$baseurlapp/$base_file_name"; ?>?mode=template_save", {
+					template: $('#template_edit_textarea').val()
+				}).done(function(data) {
+					$("#template_edit").modal('hide');
+				});
+			});
+			
+			$('#template_saveprev').click(function() {
+				$.post("<?php echo "$baseurlapp/$base_file_name"; ?>?mode=template_save", {
+					template: $('#template_edit_textarea').val()
+				}).done(function(data) {
+					window.open("<?php echo "$baseurlapp/$base_file_name"; ?>?preview", '_blank');
+				});
+			});
 		
 			$("#view_log").click(function() {
 				alert('<?php echo $message; ?>');
