@@ -167,7 +167,6 @@ $file_contents = false;
 if(file_exists($file_path_md))
 	$file_contents = file_get_contents($file_path_md);
 
-#else die("NOT EXISTS $file_path_md");
 
 if($file_contents == false) {
 	$file_contents = DEFAULT_TEXT;
@@ -213,6 +212,11 @@ foreach(glob($list_files_path) as $list_file) {
 		$count++;
 	}
 }
+
+
+# Get template file
+$template_file = htmlspecialchars(file_get_contents(
+	file_exists("files/template.php") ? "files/template.php" : "template.php"));
 
 function max_upload() {
 	// Determines the maximum upload size allowed

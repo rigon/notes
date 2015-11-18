@@ -291,6 +291,7 @@ $baseurl			- URL with the filename
 								<li><a id="download_html" href="#">Download as HTML</a></li>
 								<li><a id="download_markdown" href="#">Download as Markdown</a></li>
 								<li class="divider"></li>
+								<li><a id="edit_template" href="#">Edit template</a></li>
 								<li><?php echo ($file_readonly ?
 									'<li class="disabled"><a href="#" disabled>This file is already read-only</a></li>' :
 									"<a href=\"$baseurl?mode=readonly\">Make this file read-only</a></li>"); ?>
@@ -341,6 +342,32 @@ $baseurl			- URL with the filename
 				<!-- END Editor -->
 			</div>
 		</div>
+		
+		
+		<!-- Template editor -->
+		<div id="edit_template_form" class="modal fade" tabindex="-1" role="document">
+			<div class="modal-dialog" role="document" style="width: 80%;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">Edit template</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<textarea class="form-control" id="edit_template_textarea" style="height: 70vh; max-width: 100%; min-width: 100%;"><?php echo $template_file; ?></textarea>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-error">Save</button>
+						<button type="button" class="btn btn-primary">Save and Preview</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		
+		
 		<script type="text/javascript">
 			var mode = "<?php echo $file_mode; ?>";
 			var markdown = <?php echo json_encode($file_contents); ?>;
@@ -387,6 +414,14 @@ $baseurl			- URL with the filename
 				$(this).attr("download", "<?php echo $file_name; ?>.md");
 				$(this).click();
 			});
+			
+			$('#edit_template').click(function() {
+				$("#edit_template_form").modal('show');
+			})
+			
+			//modal('shown.bs.modal', function () {
+			//	$('#myInput').focus()
+			//});
 		
 			$("#view_log").click(function() {
 				alert('<?php echo $message; ?>');
