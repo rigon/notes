@@ -17,6 +17,8 @@ define('REVISION_MARKER', '_rev');		# marker indicating if it is a revision file
 define('FILES_PATH', 'files/%s/');		# path where the files are stored. Use %s to be replaced with the filename
 define('CSS_START', '<style>');			# start of a CSS section
 define('CSS_END', '</style>');			# end of a CSS section
+define('TEMPLATE_EDIT', 'template.php');					# template used for editing
+define('TEMPLATE_PUBLISH', 'files/publish_template.php');	# template used for publishing
 define('DEFAULT_TEXT', "# Creating a new file\n\nThis file does not exist. You can place your own text here.\n\n**HAVE FUN!**");
 
 
@@ -161,7 +163,7 @@ else if($file_mode == "upload" and !$file_readonly) {
 # Save template
 else if($file_mode == "template_save") {
 	$template = $_REQUEST['template'];
-	$result = file_put_contents("files/template.php", $template);
+	$result = file_put_contents(TEMPLATE_PUBLISH, $template);
 	
 	if($result === FALSE)
 		die('Error saving the template...');
@@ -236,9 +238,6 @@ function max_upload() {
 	return $upload_mb;
 }
 
-# Get template file
-$template_file = htmlspecialchars(file_get_contents(
-	file_exists("files/template.php") ? "files/template.php" : "template.php"));
 	
 
 
@@ -251,10 +250,18 @@ header('Content-Type: text/html; charset=utf-8');
 //header('Cache-Control: post-check=0, pre-check=0', FALSE);
 //header('Pragma: no-cache');
 
-if(isset($_REQUEST['template_preview']) and isset($_REQUEST['template']))
-	eval("?>".$_REQUEST['template']."<?php ");
-else if(isset($_REQUEST['preview']))
-	include('files/template.php');
+
+# Get template file
+$template_file = htmlspecialchars(file_get_contents(
+	file_exists(TEMPLATE_PUBLISH) ? TEMPLATE_PUBLISH : TEMPLATE_EDIT));
+
+
+if(isset($_REQUEST['preview'])) {		# Preview publish interface
+	if(isset($_REQUEST['template']))
+		eval('?>'.$_REQUEST['template'].'<?php ');		# Preview with the template provided
+	else
+		include(file_exists(TEMPLATE_PUBLISH) ? TEMPLATE_PUBLISH : TEMPLATE_EDIT);		# Preview with the saved template
+}
 else
-	include('template.php');
+	include(TEMPLATE_EDIT);		# Use the edit template
 

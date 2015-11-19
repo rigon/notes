@@ -424,15 +424,14 @@ $baseurl			- URL with the filename
 					template: $('#template_edit_textarea').val()
 				}).done(function(data) {
 					alert(data);
-					$("#template_edit").modal('hide');
 				});
 			});
 			
 			$("#template_preview").click(function() {
-				$.post("<?php echo "$baseurlapp/$base_file_name"; ?>?template_preview", {
+				$.post("<?php echo "$baseurlapp/$base_file_name"; ?>?preview", {
 					template: $("#template_edit_textarea").val()
 				}).done(function(data) {
-					var previewWindow = window.open("", "spmdwe_preview_template");
+					var previewWindow = window.open("", "spmdwe_preview");
 					previewWindow.document.open();
 					previewWindow.document.write(data);
 					previewWindow.document.close();
