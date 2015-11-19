@@ -2,6 +2,7 @@
 /**
 GLOBAL VARIABLES
 ================
+$base_file_name     - name of the file, all revision files have the same base filename
 $file_name			- filename of the current file
 $file_revisions		- list of revisions to the file
 $file_readonly		- flag indicating if the file is read only
@@ -12,6 +13,7 @@ $list_files			- list of attached files
 $url_files			- URL to the files
 $baseurlapp			- base URL for the application, i. e. URL without the filename
 $baseurl			- URL with the filename
+$html				- HTML of the published version of the file
 
 */
 ?><!DOCTYPE html>
@@ -156,25 +158,27 @@ $baseurl			- URL with the filename
 				<!-- Navbar -->
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
+					
+						<!-- Home -->
 						<li <?php if($file_name=="home") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp.'/home'; ?>">Home</a></li>
-						<li <?php if($file_name=="readme") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp.'/readme'; ?>">Readme</a></li>
-						<li <?php if($file_name=="examples") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp.'/examples'; ?>">Examples</a></li>
+						
 						
 						<!-- History -->
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">History <span class="caret"></span></a>
 							<ul class="dropdown-menu scrollable-menu" role="menu">
-								<li><a href="<?php echo "$baseurlapp/$base_file_name"; ?>">Current File</a></li>
+								<li <?php if($file_name==$base_file_name) echo 'class="active"'; ?>><a href="<?php echo "$baseurlapp/$base_file_name"; ?>">Current File</a></li>
 								<li class="divider"></li>
 								<?php
 									if(count($file_revisions) < 1)
 										echo '<li class="dropdown-header">This file has no history</li>';
 									else
 										foreach($file_revisions as $rev)
-											echo "<li><a href=\"$baseurlapp/$rev\">$rev</a></li>";
+											echo '<li'.($file_name==$rev ? ' class="active"' : '')."><a href=\"$baseurlapp/$rev\">$rev</a></li>";
 								?>
 							</ul>
 						</li>
+						
 						
 						<!-- Files -->
 						<li class="dropdown files-dropdown">
@@ -255,13 +259,14 @@ $baseurl			- URL with the filename
 							</ul>
 						</li>
 						
+						
 						<!-- Options -->
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Options <span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
 								<li><a id="template_edit_button" href="#">Edit template</a></li>
 								<li><a id="publish" href="#">Publish file</a></li>
-								<li><a id="publish_view" href="#">View published version</a></li>
+								<li><a href="<?php echo $baseurl; ?>?preview" target="_blank">View published version</a></li>
 								<li class="divider"></li>
 								<li><a id="download_html" href="#">Download as HTML</a></li>
 								<li><a id="download_markdown" href="#">Download as Markdown</a></li>
@@ -272,7 +277,22 @@ $baseurl			- URL with the filename
 								<li><a id="view_log" href="#">View Log</a></li>
 							</ul>
 						</li>
+					
+					
+						<!-- Help -->
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Help <span class="caret"></span></a>
+							<ul class="dropdown-menu" role="menu">
+								<li <?php if($file_name=="readme") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp.'/readme'; ?>">Readme</a></li>
+								<li <?php if($file_name=="examples") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp.'/examples'; ?>">Examples</a></li>
+								<li <?php if($file_name=="markdown_styles") echo 'class="active"'; ?>><a href="<?php echo $baseurlapp.'/markdown_styles'; ?>">Markdown styles</a></li>
+							</ul>
+						</li>
+						
 					</ul>
+					
+					
+					<!-- Right-side navbar: File to open, View, Edit -->
 					<ul class="nav navbar-nav navbar-right">
 						<li <?php if($file_mode=="view") echo 'class="active"'; ?>><a href="<?php echo $baseurl; ?>">View</a></li>
 						<li class="<?php echo ($file_readonly ? 'disabled ' : '').($file_mode=='edit' ? 'active' : ''); ?>">
@@ -282,6 +302,7 @@ $baseurl			- URL with the filename
 					<form class="navbar-form navbar-right">
 						<input type="text" class="form-control" placeholder="Filename to open..." name="file" value="<?php echo $file_name; ?>">
 					</form>
+					
 				</div><!--/.nav-collapse -->
 			</div>
 		</nav>
@@ -394,7 +415,7 @@ $baseurl			- URL with the filename
 			});
 			
 			$("#template_save").click(function() {
-				$.post("<?php echo "$baseurl"; ?>?mode=template_save", {
+				$.post("<?php echo $baseurl; ?>?mode=template_save", {
 					template: $('#template_edit_textarea').val()
 				}).done(function(data) {
 					alert(data);
@@ -402,7 +423,7 @@ $baseurl			- URL with the filename
 			});
 			
 			$("#template_preview").click(function() {
-				$.post("<?php echo "$baseurlapp/$base_file_name"; ?>?preview", {
+				$.post("<?php echo $baseurl; ?>?preview", {
 					template: $("#template_edit_textarea").val()
 				}).done(function(data) {
 					var previewWindow = window.open("", "spmdwe_preview");
@@ -413,15 +434,11 @@ $baseurl			- URL with the filename
 			});
 			
 			$("#publish").click(function() {
-				$.post("<?php echo "$baseurl"; ?>?mode=publish", {
+				$.post("<?php echo $baseurl; ?>?mode=publish", {
 					html: $("#wmd-preview-editor").html()
 				}).done(function(data) {
 					alert(data);
 				});
-			});
-			
-			$("#publish_view").click(function() {
-				window.open("<?php echo "$baseurl"; ?>?preview", "");
 			});
 		
 			$("#view_log").click(function() {
@@ -437,7 +454,7 @@ $baseurl			- URL with the filename
 			$("#previews").empty();
 
 			var dropzone = new Dropzone(document.documentElement, {		// Make the whole document a dropzone
-				url: "<?php echo "$baseurlapp/$base_file_name"; ?>",	// Set the url
+				url: "<?php echo $baseurl; ?>",	// Set the url
 				maxFilesize: <?php echo max_upload(); ?>,
 				thumbnailWidth: 80,
 				thumbnailHeight: 80,
