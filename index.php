@@ -10,7 +10,7 @@
 
 # Configuration
 $file_name = "home";		# file by default
-$file_mode = "view";		# "view" (implied default); "edit", "save", "save_edit"
+$file_mode = "view";		# "view" (implied default); "edit", "save", "save_edit", "upload", "template_save", "publish"
 
 define('SAVE_ENABLED', true);			# set to false to disable saving ("demo mode")
 define('REVISION_MARKER', '_rev');		# marker indicating if it is a revision file
@@ -55,6 +55,7 @@ $revision_marker_position = strrpos($file_name, REVISION_MARKER);
 $base_file_name = ($revision_marker_position === false ? $file_name : substr($file_name, 0, $revision_marker_position));
 $file_path = sprintf(FILES_PATH, $base_file_name);
 $file_path_md = "$file_path$file_name.md";
+$publish_file = "$file_path$file_name.html";
 
 
 # Gets the mode
@@ -171,6 +172,17 @@ else if($file_mode == "template_save") {
 	exit('Template saved!');
 }
 
+# Publish file
+else if($file_mode == "publish") {
+	$publish_html = $_REQUEST['html'];
+	
+	$result = file_put_contents($publish_file, $publish_html);
+	
+	if($result === FALSE)
+		die('Error publishing file...');
+	
+	exit('File published!');
+}
 
 
 
@@ -202,6 +214,12 @@ else {
 			$pos = strlen($file_contents) - 1;
 	} while(true);
 }
+
+
+# if the file was published
+$html = "<h1>File not published!</h1>";
+if(file_exists($publish_file))
+	$html = file_get_contents($publish_file);
 
 
 # Base path for history files

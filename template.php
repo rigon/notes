@@ -241,35 +241,6 @@ $baseurl			- URL with the filename
 													<img class="media-object" data-dz-thumbnail />
 												</div>
 											</div>
-											
-											
-											<!--<div>
-												<span class="preview"><img data-dz-thumbnail /></span>
-											</div>
-											<div>
-												<p class="name" data-dz-name></p>
-												<strong class="error text-danger" data-dz-errormessage></strong>
-											</div>
-											<div>
-												<p class="size" data-dz-size></p>
-												<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-													<div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
-												</div>
-											</div>
-											<div>
-												<button class="btn btn-primary start">
-													<i class="glyphicon glyphicon-upload"></i>
-													<span>Start</span>
-												</button>
-												<button data-dz-remove class="btn btn-warning cancel">
-													<i class="glyphicon glyphicon-ban-circle"></i>
-													<span>Cancel</span>
-												</button>
-												<button data-dz-remove class="btn btn-danger delete">
-													<i class="glyphicon glyphicon-trash"></i>
-													<span>Delete</span>
-												</button>
-											</div>-->
 										</div>
 									</div>
 								</li>
@@ -288,10 +259,13 @@ $baseurl			- URL with the filename
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Options <span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
+								<li><a id="template_edit_button" href="#">Edit template</a></li>
+								<li><a id="publish" href="#">Publish file</a></li>
+								<li><a id="publish_view" href="#">View published version</a></li>
+								<li class="divider"></li>
 								<li><a id="download_html" href="#">Download as HTML</a></li>
 								<li><a id="download_markdown" href="#">Download as Markdown</a></li>
 								<li class="divider"></li>
-								<li><a id="template_edit_button" href="#">Edit template</a></li>
 								<li><?php echo ($file_readonly ?
 									'<li class="disabled"><a href="#" disabled>This file is already read-only</a></li>' :
 									"<a href=\"$baseurl?mode=readonly\">Make this file read-only</a></li>"); ?>
@@ -420,7 +394,7 @@ $baseurl			- URL with the filename
 			});
 			
 			$("#template_save").click(function() {
-				$.post("<?php echo "$baseurlapp/$base_file_name"; ?>?mode=template_save", {
+				$.post("<?php echo "$baseurl"; ?>?mode=template_save", {
 					template: $('#template_edit_textarea').val()
 				}).done(function(data) {
 					alert(data);
@@ -436,6 +410,18 @@ $baseurl			- URL with the filename
 					previewWindow.document.write(data);
 					previewWindow.document.close();
 				});
+			});
+			
+			$("#publish").click(function() {
+				$.post("<?php echo "$baseurl"; ?>?mode=publish", {
+					html: $("#wmd-preview-editor").html()
+				}).done(function(data) {
+					alert(data);
+				});
+			});
+			
+			$("#publish_view").click(function() {
+				window.open("<?php echo "$baseurl"; ?>?preview", "");
 			});
 		
 			$("#view_log").click(function() {
