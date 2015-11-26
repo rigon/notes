@@ -87,6 +87,8 @@ else {
 	# Discover if the file is read only
 	$file_readonly = !is_writable($file_path_md);
 	if($file_readonly) {
+		if($file_mode == "publish") die("Readonly, publishing not allowed.");
+		
 		$file_mode = "view";
 		$message .= "File in read only mode\\n";
 	}
