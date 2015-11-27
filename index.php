@@ -188,22 +188,15 @@ else if($file_mode == "publish") {
 
 # Download ZIP file with all published files
 else if($file_mode == "publishdownload") {
-	$zip = new ZipArchive();
-	$zipname = "publish.zip";
-	
-	if ($zip->open($zipname, ZipArchive::CREATE)!==TRUE)
-		exit("cannot open <$zipname>\n");
-	
-	$zip->addFile("index.php", "/index.php");
-	$zip->addFile(".htaccess", "/.htaccess");
-	$zip->addFile(TEMPLATE_PUBLISH, "/".TEMPLATE_PUBLISH);
-	$zip->close();
-	
-	$zipcont = file_get_contents("publish.zip");
-	header("Content-Type: application/octet-stream");
-	header("Content-Disposition: attachment; filename=publish.zip");
-	echo $zipcont;
-	exit();
+#	header( "Content-Type: application/x-zip" );
+#	header( "Content-Disposition: attachment; filename=\"publish.zip\"" );
+#
+#	$stream = popen("zip -q - *", "r");
+#	if($stream) {
+#		fpassthru($stream);
+#		fclose($stream);
+#	}
+	exit("Disabled");
 }
 
 
