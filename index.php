@@ -13,6 +13,8 @@ $file_name = "home";		# file by default
 $file_mode = "view";		# "view" (implied default); "edit", "save", "save_edit", "upload", "template_save", "publish"
 
 define('SAVE_ENABLED', true);			# set to false to disable saving ("demo mode")
+define('REQUIRE_AUTH', true);			# require authentication for editing
+define('AUTH_FILE', 'htpasswd');		# file containing credentials for authentication, htpasswd compatible
 define('REVISION_MARKER', '_rev');		# marker indicating if it is a revision file
 define('FILES_PATH', 'files/%s/');		# path where the files are stored. Use %s to be replaced with the filename
 define('CSS_START', '<style>');			# start of a CSS section
@@ -23,6 +25,7 @@ define('DEFAULT_TEXT', "# Creating a new file\n\nThis file does not exist. You c
 
 
 # Application
+
 
 # Ensure if the enviroment is correct
 if(empty($_GET))
@@ -38,9 +41,7 @@ if(isset($_REQUEST['file'])) {
 	if(!empty($tmpname)) $file_name = $tmpname;
 }
 
-# Google specific info for crawling
-if($file_name == "google53c7003e2135dc17.html")
-	die('google-site-verification: google53c7003e2135dc17.html');
+# Specific info for crawling
 if($file_name == "sitemap.xml") 
 	die('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 		<url><loc>http://www.spmdwe.tk/home</loc></url>
@@ -49,6 +50,51 @@ if($file_name == "sitemap.xml")
 		<url><loc>http://www.spmdwe.tk/markdown_styles</loc></url>
 		</urlset>');
 
+
+# Inicializations
+$message = "";
+$file_readonly = true;
+$file_css = array();
+$user = "";
+
+
+# Authentication
+$authenticated = !REQUIRE_AUTH;		// Automatically authenticated if authentication is not required
+if(REQUIRE_AUTH) {
+
+	## Check authentication
+	if(isset($_SERVER['PHP_AUTH_USER']) and isset($_SERVER['PHP_AUTH_PW']) and file_exists(AUTH_FILE)) {
+		$user = $_SERVER['PHP_AUTH_USER'];
+		$pass = $_SERVER['PHP_AUTH_PW'];
+		
+		exec("htpasswd -vb ".AUTH_FILE." $user $pass", $output, $returnval);
+		$message .= implode('\n', $output);
+		
+		if($returnval == 0)	
+			$authenticated = true;
+		else {
+			$authenticated = false;
+			$message .= 'Authentication failed!\nProceeding in published mode...\n';
+		}
+	}
+	
+	## Login or Logout
+	if((isset($_GET['login']) and !$authenticated) or (isset($_GET['logout']) and $authenticated)) {
+		$realm = $authenticated ? 'Press Cancel or Esc to proceed with logout' : 'Enter your credencials to login';
+		// Force the browser to prompt for a username and password
+		header('WWW-Authenticate: Basic realm="'.$realm.'"');
+		header('HTTP/1.0 401 Unauthorized');
+		$authenticated = false;
+	}
+	
+
+	//if($authenticated and (isset($_GET['login']) or isset($_GET['login']))) {
+	//	$redirect_url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].substr($_SERVER['REQUEST_URI'], 0, strrpos($_SERVER['REQUEST_URI'],'?'));
+	//	header("Location: $redirect_url");
+	//}
+	//if(isset($_GET['logout']))
+	//	$authenticated = false;
+}
 
 # Default path for files
 $revision_marker_position = strrpos($file_name, REVISION_MARKER);
@@ -63,17 +109,11 @@ if(isset($_REQUEST['mode']))
 	$file_mode = $_REQUEST['mode'];
 
 
-# Inicializations
-$message = "";
-$file_readonly = true;
-$file_css = array();
-
-
 # Discover the base URL of the application
 $baseurlapp = dirname($_SERVER['PHP_SELF']);
 if($baseurlapp == '/') $baseurlapp = '';
 $baseurl = "$baseurlapp/$file_name";
-$message = "Base URL: $baseurl\\n";
+$message .= "Base URL: $baseurl\\n";
 
 $url_files = sprintf($baseurlapp.'/'.FILES_PATH, $base_file_name);
 
