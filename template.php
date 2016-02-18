@@ -278,8 +278,8 @@ $html				- HTML of the published version of the file
 								<li><a id="view_log" href="#">View Log</a></li>
 							</ul>
 						</li>
-					
-					
+						
+						
 						<!-- Help -->
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Help <span class="caret"></span></a>
@@ -300,10 +300,22 @@ $html				- HTML of the published version of the file
 							<a href="<?php if(!$file_readonly) echo "$baseurl?mode=edit"; ?>">Edit</a>
 						</li>
 					</ul>
+					
 					<form class="navbar-form navbar-right">
 						<input type="text" class="form-control" placeholder="Filename to open..." name="file" value="<?php echo $file_name; ?>">
 					</form>
 					
+					
+					<?php if(REQUIRE_AUTH) { ?>
+					<!-- Login user -->
+					<ul class="nav navbar-nav navbar-right">
+						<?php if($authenticated) { ?>
+							<li><a href="?logout"><?php echo $user; ?> <span class="glyphicon glyphicon-log-out"></span></a></li>
+						<?php } else { ?>
+							<li><a href="?login">Login <span class="glyphicon glyphicon-log-in"></span></a></li>
+						<?php } ?>
+					</ul>
+					<?php } ?>
 				</div><!--/.nav-collapse -->
 			</div>
 		</nav>
