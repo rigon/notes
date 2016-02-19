@@ -267,10 +267,10 @@ $html				- HTML of the published version of the file
 								<li><a id="template_edit_button" href="#">Edit template</a></li>
 								<li><a id="publish" href="#">Publish file</a></li>
 								<li><a href="<?php echo $baseurl; ?>?preview" target="_blank">View published version</a></li>
-								<li><a href="<?php echo $baseurl; ?>?mode=publishdownload">Download publish ZIP</a></li>
 								<li class="divider"></li>
 								<li><a id="download_html" href="#">Download as HTML</a></li>
 								<li><a id="download_markdown" href="#">Download as Markdown</a></li>
+								<li><a href="<?php echo $baseurl; ?>?mode=publishdownload">Download entire page as ZIP</a></li>
 								<li class="divider"></li>
 								<li><?php echo ($file_readonly ?
 									'<li class="disabled"><a href="#" disabled>This file is already read-only</a></li>' :

@@ -61,40 +61,51 @@ $user = "";
 # Authentication
 $authenticated = !REQUIRE_AUTH;		// Automatically authenticated if authentication is not required
 if(REQUIRE_AUTH) {
+	session_start();
 
 	## Check authentication
 	if(isset($_SERVER['PHP_AUTH_USER']) and isset($_SERVER['PHP_AUTH_PW']) and file_exists(AUTH_FILE)) {
-		$user = $_SERVER['PHP_AUTH_USER'];
-		$pass = $_SERVER['PHP_AUTH_PW'];
+		$user = escapeshellarg($_SERVER['PHP_AUTH_USER']);
+		$pass = escapeshellarg($_SERVER['PHP_AUTH_PW']);
 		
-		exec("htpasswd -vb ".AUTH_FILE." $user $pass", $output, $returnval);
-		$message .= implode('\n', $output);
+		// Check user credentials
+		exec("htpasswd -vb ".AUTH_FILE." $user $pass 2>&1", $output, $returnval);
+		$message .= implode('\n', $output).'\n';
 		
-		if($returnval == 0)	
+		// Start session if valid
+		if($returnval == 0 and isset($_GET['login']))
+			$_SESSION['session_started'] = true;
+		
+		// Authenticate user if valid
+		if($returnval == 0 and isset($_SESSION['session_started']) and $_SESSION['session_started'] == true)
 			$authenticated = true;
 		else {
 			$authenticated = false;
 			$message .= 'Authentication failed!\nProceeding in published mode...\n';
 		}
+		
+		// Cleanup
+		$user = $_SERVER['PHP_AUTH_USER'];
+		unset($pass);
 	}
 	
-	## Login or Logout
-	if((isset($_GET['login']) and !$authenticated) or (isset($_GET['logout']) and $authenticated)) {
-		$realm = $authenticated ? 'Press Cancel or Esc to proceed with logout' : 'Enter your credencials to login';
+	## Login
+	if((isset($_GET['login']) and !$authenticated)) {
 		// Force the browser to prompt for a username and password
-		header('WWW-Authenticate: Basic realm="'.$realm.'"');
+		header('WWW-Authenticate: Basic realm="Enter your credencials to login"');
 		header('HTTP/1.0 401 Unauthorized');
 		$authenticated = false;
 	}
 	
-
-	//if($authenticated and (isset($_GET['login']) or isset($_GET['login']))) {
+	## Logout
+	if(isset($_GET['logout']) and $authenticated) {
+		unset($_SESSION['session_started']);
+		$authenticated = false;
+	}
 	//	$redirect_url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].substr($_SERVER['REQUEST_URI'], 0, strrpos($_SERVER['REQUEST_URI'],'?'));
 	//	header("Location: $redirect_url");
-	//}
-	//if(isset($_GET['logout']))
-	//	$authenticated = false;
 }
+
 
 # Default path for files
 $revision_marker_position = strrpos($file_name, REVISION_MARKER);
@@ -135,7 +146,7 @@ else {
 }
 
 # Application in Demo mode (read-only)
-if(!SAVE_ENABLED) {
+if(!SAVE_ENABLED or !$authenticated) {
 	$file_mode = "view";
 	$file_readonly = true;
 	$message .= "Demo mode - files are just read only\\n";
@@ -326,15 +337,18 @@ header('Content-Type: text/html; charset=utf-8');
 
 # Get template file
 $template_file = htmlspecialchars(file_get_contents(
-	file_exists(TEMPLATE_PUBLISH) ? TEMPLATE_PUBLISH : TEMPLATE_EDIT));
+		file_exists(TEMPLATE_PUBLISH) ? TEMPLATE_PUBLISH : TEMPLATE_EDIT));
+		
 
+# Preview with the template provided
+if(isset($_REQUEST['preview']) and isset($_REQUEST['template']))
+	eval('?>'.$_REQUEST['template'].'<?php ');	
 
-if(isset($_REQUEST['preview'])) {		# Preview publish interface
-	if(isset($_REQUEST['template']))
-		eval('?>'.$_REQUEST['template'].'<?php ');		# Preview with the template provided
-	else
-		include(file_exists(TEMPLATE_PUBLISH) ? TEMPLATE_PUBLISH : TEMPLATE_EDIT);		# Preview with the saved template
-}
+# Preview with the saved template
+else if(file_exists(TEMPLATE_PUBLISH) and (!$authenticated or (isset($_REQUEST['preview']) and !isset($_REQUEST['template']))))
+	include(TEMPLATE_PUBLISH);
+
+# Use the edit template	
 else
-	include(TEMPLATE_EDIT);		# Use the edit template
+	include(TEMPLATE_EDIT);
 
