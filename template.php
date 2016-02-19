@@ -270,7 +270,7 @@ $html				- HTML of the published version of the file
 								<li class="divider"></li>
 								<li><a id="download_html" href="#">Download as HTML</a></li>
 								<li><a id="download_markdown" href="#">Download as Markdown</a></li>
-								<li><a href="<?php echo $baseurl; ?>?mode=publishdownload">Download entire page as ZIP</a></li>
+								<li><a href="<?php echo $baseurl; ?>?mode=downloadzip">Download entire page as ZIP</a></li>
 								<li class="divider"></li>
 								<li><?php echo ($file_readonly ?
 									'<li class="disabled"><a href="#" disabled>This file is already read-only</a></li>' :

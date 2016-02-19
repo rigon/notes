@@ -237,17 +237,17 @@ else if($file_mode == "publish") {
 	exit('File published!');
 }
 
-# Download ZIP file with all published files
-else if($file_mode == "publishdownload") {
-#	header( "Content-Type: application/x-zip" );
-#	header( "Content-Disposition: attachment; filename=\"publish.zip\"" );
-#
-#	$stream = popen("zip -q - *", "r");
-#	if($stream) {
-#		fpassthru($stream);
-#		fclose($stream);
-#	}
-	exit("Disabled");
+# Download ZIP file with all files of the page
+else if($file_mode == "downloadzip") {
+	header( "Content-Type: application/x-zip" );
+	header( "Content-Disposition: attachment; filename=\"publish.zip\"" );
+
+	$stream = popen("zip -qj - files/$file_name/*", "r");
+	if($stream) {
+		fpassthru($stream);
+		fclose($stream);
+	}
+	exit();
 }
 
 
