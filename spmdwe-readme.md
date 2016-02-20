@@ -87,6 +87,7 @@ Then the next configuration should be used. This can be done via `.htaccess` fil
     
     RewriteRule .* "-" [F]
 
+You have to change the directory `/notes` to the directory you've installed.
 
 
 Usage
