@@ -1,13 +1,14 @@
 # notes
-A notebok application to have your notes always at hand.
+A notebook application to have your notes always on hand.
 
 Single-page Markdown Web Editor (`spmdwe`)
 ===
-Copyleft rigon, December 2014
+Copyleft [rigon](http://www.rigon.tk), February 2016
 
 Homepage and demo:
 
 * [http://www.spmdwe.tk](http://www.spmdwe.tk)
+
 
 Intro
 ---
@@ -16,15 +17,14 @@ This is a small "web application". It's based on a application called **spmdwe**
 
 * [http://sdaaubckp.sourceforge.net/spmdwe/spmdwe.php](http://sdaaubckp.sourceforge.net/spmdwe/spmdwe.php) 
 
-The application consists on one file,  (_which was renamed to `index.php`_). It can be installed on a php server, and used to edit text files with live preview for Markdown syntax.
+The application consists on one file. It can be installed on a PHP Web Server and can used to edit text files with live preview for Markdown syntax. With proper permissions on the server's directory, files can also be saved on the host (a backup of the previous version is also saved). There are two switches, one that disables saving and other that disables authentication.
 
-With proper permissions on the server directory, files can also be saved on the host (a backup of the previous version is also saved). There is also a switch that disables saving, enabled at the demo page for protection.
-
-It is based on three other open-source packages, which can be downloaded separately (see Installation below):
+It is based on four other open-source packages, which can be downloaded separately (see Installation below):
 
 * [pagedown - A JavaScript Markdown converter and editor](http://code.google.com/p/pagedown/) (_see also [this post](http://stackoverflow.com/a/135155/277826)_)
 * [JQuery](http://jquery.com/)
 * [Bootstrap](http://getbootstrap.com/)
+* [Dropzone.js](http://www.dropzonejs.com/)
 
 While the default .css style shown here is hardly impressive, do check out the list of some [free markdown css styles](markdown_styles), which can be used instead.
 
@@ -43,8 +43,12 @@ In this version, these new features have been added:
 * Clear URLs, without the hassle of URL parameters
 * Edition side by side with the view
 * Ability to navigate through history
+* Ready for Mobile, with responsive layout that adapts automatically
+* File upload management, attached to each page
+* Publish mode for guest users
+* Website template editor and previewer
+* Page download in HTML, Markdown and ZIP
 * Option to make files read only
-* Ready for Mobile, with responsive layout that automatically adapts
 * Application improvements
 
 Download
@@ -62,9 +66,10 @@ Here are the steps needed to install this application, in the form of `bash` com
     # checkout from svn - creates `spmdwe` directory and files in it
     wget https://github.com/rigon/notes/archive/master.zip
     unzip master.zip
+    mv notes-master/ notes
 
-    chmod 775 spmdwe  # on server, else cannot save backups!
-    cd spmdwe/files/
+    chmod 775 notes/files  # on server, else cannot save files!
+
 
 Configuration
 ---
@@ -73,11 +78,22 @@ To work properly it is required the ```ReWrite``` Module to be active in apache.
 Then the next configuration should be used. This can be done via `.htaccess` file or on apache configuration:
 
     RewriteEngine on
-    RewriteRule ^(?!static/)(.*)$ index.php?file=$1 [L,QSA]
+    
+    RewriteCond %{REQUEST_URI} !^/notes/static
+    RewriteCond %{REQUEST_URI} !^/notes/files/[^/]+/[^/]+\.[^/]+
+    
+    RewriteRule ^([^/]*)$ index.php?file=$1 [L,QSA]
+    
+    
+    RewriteCond %{REQUEST_URI} !^/notes/static
+    RewriteCond %{REQUEST_URI} !^/notes/files/[^/]+/[^/]+\.[^/]+
+    
+    RewriteRule .* "-" [F]
+
 
 
 Usage
----
+----
 
 The application is pretty simple:
 
@@ -86,7 +102,8 @@ The application is pretty simple:
 * Both `view` and `edit` can be used as values for the `mode` query string argument (see source code for details)
 * Upon save, the old version is backed up, with a filename with appended unix timestamp; the new version is saved under the original filename - and the new version is displayed in view mode
 * **Save** will save the file and continue in editing mode and **Save and View** will save and change to view mode
-* A file is chosen by adding manually the filename in the URL, say `http://example.com/spmdwe/somefile.`
+* A file is chosen by adding manually the filename in the URL, say `http://example.com/notes/somefile.`
 * If a requested file (`somefile`) doesn't exist, it should be created automatically, and edit mode displayed
 * Otherwise, without any other arguments, a file is loaded in view mode
-* If the application is called without any arguments whatsoever (say, `http://example.com/spmdwe/`), then it loads `readme` and goes into view mode.
+* If the application is called without any arguments whatsoever (say, `http://example.com/notes/`), then it loads `home` and goes into view mode.
+* If you are a guest user, you will see the published version and you cannot edit files.
