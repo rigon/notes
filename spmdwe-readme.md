@@ -65,7 +65,7 @@ Here are the steps needed to install this application, in the form of `bash` com
     unzip master.zip
     mv notes-master/ notes
 
-    chmod 775 notes/files  # on server, else cannot save files!
+    sudo chown www-data:www-data notes/files  # on server, else cannot save files!
 
 
 Configuration
