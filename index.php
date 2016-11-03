@@ -13,7 +13,7 @@ $file_name = "home";		# file by default
 $file_mode = "view";		# "view" (implied default); "edit", "save", "save_edit", "upload", "template_save", "publish"
 
 define('SAVE_ENABLED', true);			# set to false to disable saving ("demo mode")
-define('REQUIRE_AUTH', true);			# require authentication for editing
+define('REQUIRE_AUTH', false);			# require authentication for editing
 define('AUTH_FILE', 'htpasswd');		# file containing credentials for authentication, htpasswd compatible
 define('REVISION_MARKER', '_rev');		# marker indicating if it is a revision file
 define('FILES_PATH', 'files/%s/');		# path where the files are stored. Use %s to be replaced with the filename
