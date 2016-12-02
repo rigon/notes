@@ -38,6 +38,8 @@ $html				- HTML of the published version of the file
 		<script src="<?php echo $baseurlapp; ?>/static/js/bootstrap.min.js"></script>
 		<script src="<?php echo $baseurlapp; ?>/static/js/dropzone.js"></script>
 
+		<script src="<?php echo $baseurlapp; ?>/static/js/ace-editor/ace.js" type="text/javascript" charset="utf-8"></script>
+
 		<style type="text/css">
 			body {
 				padding-top: 70px;
@@ -362,7 +364,7 @@ $html				- HTML of the published version of the file
 					</div>
 					<div class="modal-body">
 						<div class="form-group">
-							<textarea class="form-control" id="template_edit_textarea" style="height: 70vh; max-width: 100%; min-width: 100%;"><?php echo $template_file; ?></textarea>
+							<div class="form-control" id="template_edit_textarea" style="height: 70vh; max-width: 100%; min-width: 100%;"><?php echo $template_file; ?></div>
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -374,7 +376,13 @@ $html				- HTML of the published version of the file
 			</div>
 		</div>
 		
-		
+		<script type="text/javascript">
+			var templateEditor = ace.edit("template_edit_textarea");
+			templateEditor.setTheme("ace/theme/crimson_editor");
+			templateEditor.getSession().setMode("ace/mode/php");
+			templateEditor.setShowPrintMargin(false);
+			document.getElementById('template_edit_textarea').style.fontSize='13px';
+		</script>
 		
 		<script type="text/javascript">
 			var mode = "<?php echo $file_mode; ?>";
@@ -429,7 +437,7 @@ $html				- HTML of the published version of the file
 			
 			$("#template_save").click(function() {
 				$.post("<?php echo $baseurl; ?>?mode=template_save", {
-					template: $('#template_edit_textarea').val()
+					template: templateEditor.getValue()
 				}).done(function(data) {
 					alert(data);
 				});
@@ -437,7 +445,7 @@ $html				- HTML of the published version of the file
 			
 			$("#template_preview").click(function() {
 				$.post("<?php echo $baseurl; ?>?preview", {
-					template: $("#template_edit_textarea").val()
+					template: templateEditor.getValue()
 				}).done(function(data) {
 					var previewWindow = window.open("", "spmdwe_preview");
 					previewWindow.document.open();
