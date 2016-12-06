@@ -147,6 +147,8 @@ else {
 
 # Application in Demo mode (read-only)
 if(!SAVE_ENABLED or !$authenticated) {
+	if($file_mode == "template_save") die("Could not save template because authentication is invalid.");
+	
 	$file_mode = "view";
 	$file_readonly = true;
 	$message .= "Demo mode - files are just read only\\n";
