@@ -1,0 +1,19 @@
+{
+  "name": "notes",
+  "version": "2.0.0",
+  "description": "A notebook application to have your notes always on hand. http://www.spmdwe.tk",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rigon/notes.git"
+  },
+  "author": "rigon",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/rigon/notes/issues"
+  },
+  "homepage": "https://github.com/rigon/notes#readme"
+}
