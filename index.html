@@ -35,7 +35,7 @@
 			
 			.preview-wrapper, #editor {
 				position: absolute;
-				top: 50px;
+				top: 0px;
 				bottom: 0px;
 				width: 50%;
 			}
@@ -58,7 +58,7 @@
 			#editor textarea {
 				resize: vertical;
 			}
-			#editor-properties {
+			#editor-page, #editor-files {
 				padding: 15px;
 				overflow: auto;
 				position: absolute;
@@ -177,143 +177,95 @@
 			JavaScript not detected; JavaScript is required for editing parts of the application.
 		</noscript>
 		
-		<!-- Fixed navbar -->
-		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-			<div class="container">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="$baseurl">$file_name Spmdwe</a>
-				</div>
-				
-				<!-- Navbar -->
-				<div id="navbar" class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
-					
-						<!-- Home -->
-						<li class="active"><a href="$baseurlapp/home">Home</a></li>
-						
-						
-						<!-- History -->
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">History <span class="caret"></span></a>
-						</li>
-						
-						
-						<!-- Files -->
-						<li class="dropdown files-dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Files <span class="caret"></span></a>
-						</li>
-						
-						
-						<!-- Options -->
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Options <span class="caret"></span></a>
-						</li>
-						
-						
-						<!-- Help -->
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Help <span class="caret"></span></a>
-						</li>
-						
-					</ul>
-					
-					
-					<!-- Right-side navbar: File to open, View, Edit -->
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="#">View</a></li>
-						<li><a href="#">Edit</a></li>
-					</ul>
-					
-					<form class="navbar-form navbar-right">
-						<input type="text" class="form-control" placeholder="Filename to open..." name="file" value="">
-					</form>
-					
-					
-					
-					<!-- Login user -->
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="?login">Login <span class="glyphicon glyphicon-log-in"></span></a></li>
-					</ul>
-				</div><!--/.nav-collapse -->
-			</div>
-		</nav>
-		
-		<!-- Container -->
-		<div class="container">
-		</div>
-		
+		<!-- Preview -->
 		<div class="preview-wrapper">
-			<iframe id="preview"></iframe>
+			<iframe id="preview" src="http://www.rigon.tk"></iframe>
 		</div>
 
 		<div id="editor">
 
 			<!-- Nav tabs -->
 			<ul class="nav nav-tabs" role="tablist">
-				<li role="presentation"><a href="#editor-properties" aria-controls="editor-properties" role="tab" data-toggle="tab">Properties</a></li>
 				<li role="presentation" class="active"><a href="#editor-page" aria-controls="editor-page" role="tab" data-toggle="tab">Page</a></li>
+				<li role="presentation"><a href="#editor-text" aria-controls="editor-text" role="tab" data-toggle="tab">Text</a></li>
+				<li role="presentation"><a href="#editor-files" aria-controls="editor-files" role="tab" data-toggle="tab">Files</a></li>
 				<li role="presentation"><a href="#editor-styles" aria-controls="editor-styles" role="tab" data-toggle="tab">Styles</a></li>
 				<li role="presentation"><a href="#editor-script" aria-controls="editor-script" role="tab" data-toggle="tab">Script</a></li>
-				<li role="presentation"><a href="#editor-files" aria-controls="editor-files" role="tab" data-toggle="tab">Files</a></li>
 				<li role="presentation"><a href="#editor-template" aria-controls="editor-template" role="tab" data-toggle="tab">Template</a></li>
-				<li role="presentation" style="float: right"><a href="#">Save all</a></li>
+				<li role="presentation" style="float: right"><a href="#">Save</a></li>
 				<li role="presentation" style="float: right"><a href="#">Publish</a></li>
+				<li role="presentation" style="float: right"><a href="#">Close</a></li>
 			</ul>
 			<div class="tab-content">
 				<!-- Panel Editor Properties -->
-				<div role="tabpanel" class="tab-pane active" id="editor-properties">
+				<div role="tabpanel" class="tab-pane active" id="editor-page">
+
 					<form class="form-horizontal">
 						<div class="form-group">
 							<label for="properties-title" class="col-sm-2 control-label">Title</label>
 							<div class="col-sm-10">
-								<input type="email" class="form-control" id="properties-title" placeholder="Page title">
+								<input type="text" class="form-control" id="properties-title" placeholder="Page title">
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="properties-keywords" class="col-sm-2 control-label">Keywords</label>
 							<div class="col-sm-10">
-								<input type="password" class="form-control" id="properties-keywords" placeholder="Keywords">
+								<input type="text" class="form-control" id="properties-keywords" placeholder="Keywords">
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="properties-description" class="col-sm-2 control-label">Description</label>
 							<div class="col-sm-10">
-								<textarea type="password" class="form-control" id="properties-description" rows="4" placeholder="Description"></textarea>
+								<textarea class="form-control" id="properties-description" rows="4" placeholder="Description"></textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-sm-offset-2 col-sm-10">
-								<button type="submit" class="btn btn-primary">Apply</button>
-								Changes are applied immediatily.
+								Changes are immediatily published when you save.
+							</div>
+						</div>
+						<hr>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Download</label>
+							<div class="col-sm-10">
+								<button class="btn btn-default">HTML</button>
+								<button class="btn btn-default">Markdown</button>
+								<button class="btn btn-default">Whole page as ZIP</button>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Read only</label>
+							<div class="col-sm-10">
+								<button class="btn btn-warning" id="properties-readonly">Make this page read-only</button>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<div class="dropdown">
+									<button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+										History <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu">
+										<li><a href="#">2016-12-12 08:43:24</a></li>
+										<li><a href="#">2016-12-12 08:43:24</a></li>
+										<li><a href="#">2016-12-12 08:43:24</a></li>
+										<li><a href="#">2016-12-12 08:43:24</a></li>
+										<li><a href="#">2016-12-12 08:43:24</a></li>
+										<li><a href="#">2016-12-12 08:43:24</a></li>
+										<li><a href="#">2016-12-12 08:43:24</a></li>
+										<li><a href="#">2016-12-12 08:43:24</a></li>
+										<li><a href="#">2016-12-12 08:43:24</a></li>
+									</ul>
+								</div>
 							</div>
 						</div>
 					</form>
-
-					<h3 class="title">Page history</h3>
-					<ul class="nav">
-						<li><a href="#">2016-12-12 08:43:24</a></li>
-						<li><a href="#">2016-12-12 08:43:24</a></li>
-						<li><a href="#">2016-12-12 08:43:24</a></li>
-						<li><a href="#">2016-12-12 08:43:24</a></li>
-						<li><a href="#">2016-12-12 08:43:24</a></li>
-						<li><a href="#">2016-12-12 08:43:24</a></li>
-						<li><a href="#">2016-12-12 08:43:24</a></li>
-						<li><a href="#">2016-12-12 08:43:24</a></li>
-						<li><a href="#">2016-12-12 08:43:24</a></li>
-						<li><a href="#">2016-12-12 08:43:24</a></li>
-						<li><a href="#">2016-12-12 08:43:24</a></li>
-						<li><a href="#">2016-12-12 08:43:24</a></li>
-					</ul>
 				</div>
 				
 				<!-- Panel Editor Page -->
-				<div role="tabpanel" class="tab-pane" id="editor-page">
+				<div role="tabpanel" class="tab-pane" id="editor-text">
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-default"><span class="fa fa-bold"></span></button>
 						<button type="button" class="btn btn-default"><span class="fa fa-italic"></span></button>
@@ -345,6 +297,13 @@
 						<button type="button" class="btn btn-default"><span class="fa fa-undo"></span></button>
 						<button type="button" class="btn btn-default"><span class="fa fa-repeat"></span></button>
 					</div>
+					<div class="btn-group" role="group" style="float: right">
+						<button type="button" class="btn btn-default"><span class="fa fa-info-circle"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-expand"></span></button>
+					</div>
 
 					<div id="markdown-editor" class="editor"></div>
 					<script type="text/javascript">
@@ -358,6 +317,14 @@
 
 				<!-- Panel Editor Styles -->
 				<div role="tabpanel" class="tab-pane" id="editor-styles">
+					<div class="btn-group" role="group" style="float: right">
+						<button type="button" class="btn btn-default"><span class="fa fa-info-circle"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-expand"></span></button>
+					</div>
+
 					<div id="css-editor" class="editor"></div>
 					<script type="text/javascript">
 						var cssEditor = ace.edit("css-editor");
@@ -369,6 +336,15 @@
 
 				<!-- Panel Editor Script -->
 				<div role="tabpanel" class="tab-pane" id="editor-script">
+					
+					<div class="btn-group" role="group" style="float: right">
+						<button type="button" class="btn btn-default"><span class="fa fa-info-circle"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-expand"></span></button>
+					</div>
+
 					<div id="js-editor" class="editor"></div>
 					<script type="text/javascript">
 						var jsEditor = ace.edit("js-editor");
@@ -378,11 +354,51 @@
 					</script>
 				</div>
 
-			</div>
+				<!-- Panel Files -->
+				<div role="tabpanel" class="tab-pane" id="editor-files">
+					<div style="float: left; padding-right: 15px">
+					<!-- The fileinput-button span is used to style the file input field as button -->
+						<button class="btn btn-success fileinput-button">
+							<i class="glyphicon glyphicon-plus"></i>
+							<span>Add files...</span>
+						</button>
+						<button type="submit" class="btn btn-primary start">
+							<i class="glyphicon glyphicon-upload"></i>
+							<span>Upload</span>
+						</button>
+						<button type="reset" class="btn btn-warning cancel">
+							<i class="glyphicon glyphicon-ban-circle"></i>
+							<span>Cancel all</span>
+						</button>
+					</div>
 
+					<!-- The global file processing state -->
+					<div class="fileupload-process">
+						<div id="total-progress" class="progress progress-striped active" style="height: 34px; margin-bottom: 0px;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+							<div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+						</div>
+					</div>
+			
+				</div>
+			</div>
 		</div>
 		
 		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		<!-- Template editor -->
 		<div id="template_edit" class="modal fade" tabindex="-1" role="document">
 			<div class="modal-dialog" role="document" style="width: 80%;">
