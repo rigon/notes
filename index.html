@@ -25,14 +25,6 @@
 		<script src="./static/js/ace-editor/ace.js" type="text/javascript" charset="utf-8"></script>
 
 		<style type="text/css">
-			body {
-				padding-top: 70px;
-				padding-bottom: 30px;
-			}
-			.navbar-brand {
-				font-variant: small-caps;
-			}
-			
 			.preview-wrapper, #editor {
 				position: absolute;
 				top: 0px;
@@ -54,6 +46,7 @@
 			}
 			#editor .btn-group .btn {
 				border: none;
+				border-radius: 0px;
 			}
 			#editor textarea {
 				resize: vertical;
@@ -75,7 +68,7 @@
 				font-size: 14px;
 				border-top: 1px solid lightgray;
 				position: absolute;
-				top: 73px;
+				top: 74px;
 				right: 0px;
 				bottom: 0px;
 				width: 100%;
@@ -96,85 +89,35 @@
 					padding-left: 0px;
 				}
 			}
-			.editor textarea {
-				font-family: monospace;
-				font-size: 13px;
-				color: black;
-				min-width: 100%;
-				max-width: 100%;
-				height: 80vh;
-			}
-			
-			.scrollable-menu {
-				height: auto;
-				max-height: 80vh;
-				overflow-x: hidden;
+
+			/* The total progress gets shown by event listeners */
+			#total-progress {
+				opacity: 0;
+				transition: opacity 0.3s linear;
 			}
 
-			
-			.border {
-				border: 1px dotted red;
+			/* Hide the progress bar when finished */
+			#previews .file-row.dz-success .progress {
+				opacity: 0;
+				transition: opacity 0.3s linear;
 			}
-			
-			.container img {
-				max-width: 100%;
+
+			/* Hide the delete button initially */
+				#previews .file-row .delete {
+				display: none;
 			}
-			
-			
-			
 
-    /* Mimic table appearance */
-    div.table {
-      display: table;
-	  margin-bottom: 0px;
-    }
-    div.table .file-row {
-      display: table-row;
-    }
-    div.table .file-row > div {
-      display: table-cell;
-      vertical-align: top;
-      border-top: 1px solid #ddd;
-      padding: 8px 20px;
-    }
-    div.table .file-row:nth-child(odd) {
-      background: #f9f9f9;
-    }
+			/* Hide the start and cancel buttons and show the delete button */
 
-
-
-    /* The total progress gets shown by event listeners */
-    #total-progress {
-      opacity: 0;
-      transition: opacity 0.3s linear;
-    }
-
-    /* Hide the progress bar when finished */
-    #previews .file-row.dz-success .progress {
-      opacity: 0;
-      transition: opacity 0.3s linear;
-    }
-
-    /* Hide the delete button initially */
-    #previews .file-row .delete {
-      display: none;
-    }
-
-    /* Hide the start and cancel buttons and show the delete button */
-
-    #previews .file-row.dz-success .start,
-    #previews .file-row.dz-success .cancel {
-      display: none;
-    }
-    #previews .file-row.dz-success .delete {
-      display: block;
-    }
+			#previews .file-row.dz-success .start,
+			#previews .file-row.dz-success .cancel {
+				display: none;
+			}
+			#previews .file-row.dz-success .delete {
+				display: block;
+			}
 			
 		</style>
-		<!--<?php
-			foreach($file_css as $css)
-				echo "<style type=\"text/css\">$css</style>";
-		?>-->
 	</head>
 	<body>
 		<noscript>
@@ -266,6 +209,7 @@
 					</form>
 				</div>
 				
+
 				<!-- Panel Editor Page -->
 				<div role="tabpanel" class="tab-pane" id="editor-text">
 					<div class="btn-group" role="group">
@@ -317,44 +261,6 @@
 
 				</div>
 
-				<!-- Panel Editor Styles -->
-				<div role="tabpanel" class="tab-pane" id="editor-styles">
-					<div class="btn-group" role="group" style="float: right">
-						<button type="button" class="btn btn-default"><span class="fa fa-info-circle"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-expand"></span></button>
-					</div>
-
-					<div id="css-editor" class="editor"></div>
-					<script type="text/javascript">
-						var cssEditor = ace.edit("css-editor");
-						cssEditor.setTheme("ace/theme/dreamweaver");
-						cssEditor.getSession().setMode("ace/mode/css");
-						cssEditor.setShowPrintMargin(false);
-					</script>
-				</div>
-
-				<!-- Panel Editor Script -->
-				<div role="tabpanel" class="tab-pane" id="editor-script">
-					
-					<div class="btn-group" role="group" style="float: right">
-						<button type="button" class="btn btn-default"><span class="fa fa-info-circle"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-expand"></span></button>
-					</div>
-
-					<div id="js-editor" class="editor"></div>
-					<script type="text/javascript">
-						var jsEditor = ace.edit("js-editor");
-						jsEditor.setTheme("ace/theme/dreamweaver");
-						jsEditor.getSession().setMode("ace/mode/javascript");
-						jsEditor.setShowPrintMargin(false);
-					</script>
-				</div>
 
 				<!-- Panel Files -->
 				<div role="tabpanel" class="tab-pane" id="editor-files">
@@ -382,6 +288,69 @@
 					</div>
 			
 				</div>
+
+
+				<!-- Panel Editor Styles -->
+				<div role="tabpanel" class="tab-pane" id="editor-styles">
+					<div class="btn-group" role="group" style="float: right">
+						<button type="button" class="btn btn-default"><span class="fa fa-info-circle"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-expand"></span></button>
+					</div>
+
+					<div id="css-editor" class="editor"></div>
+					<script type="text/javascript">
+						var cssEditor = ace.edit("css-editor");
+						cssEditor.setTheme("ace/theme/dreamweaver");
+						cssEditor.getSession().setMode("ace/mode/css");
+						cssEditor.setShowPrintMargin(false);
+					</script>
+				</div>
+
+
+				<!-- Panel Editor Script -->
+				<div role="tabpanel" class="tab-pane" id="editor-script">
+					
+					<div class="btn-group" role="group" style="float: right">
+						<button type="button" class="btn btn-default"><span class="fa fa-info-circle"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-expand"></span></button>
+					</div>
+
+					<div id="js-editor" class="editor"></div>
+					<script type="text/javascript">
+						var jsEditor = ace.edit("js-editor");
+						jsEditor.setTheme("ace/theme/dreamweaver");
+						jsEditor.getSession().setMode("ace/mode/javascript");
+						jsEditor.setShowPrintMargin(false);
+					</script>
+				</div>
+
+
+				<!-- Panel Editor Template -->
+				<div role="tabpanel" class="tab-pane" id="editor-template">
+					
+					<div class="btn-group" role="group" style="float: right">
+						<button type="button" class="btn btn-default"><span class="fa fa-info-circle"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
+						<button type="button" class="btn btn-default"><span class="fa fa-expand"></span></button>
+					</div>
+
+					<div id="handlebars-editor" class="editor"></div>
+					<script type="text/javascript">
+						var jsEditor = ace.edit("handlebars-editor");
+						jsEditor.setTheme("ace/theme/dreamweaver");
+						jsEditor.getSession().setMode("ace/mode/handlebars");
+						jsEditor.setShowPrintMargin(false);
+					</script>
+				</div>
+
 			</div>
 		</div>
 		
