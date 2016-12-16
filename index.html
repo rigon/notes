@@ -61,7 +61,7 @@
 				font-size: 14px;
 				border-top: 1px solid lightgray;
 				position: absolute;
-				top: 84px;
+				top: 82px;
 				right: 0px;
 				bottom: 0px;
 				width: 100%;
@@ -218,6 +218,8 @@
 								<span class="fa fa-file-text"></span> <span class="caret">
 							</button>
 							<ul class="dropdown-menu">
+								<li><a href="#">Custom page</a></li>
+								<li class="divider"></li>
 								<li><a href="#">Page 1</a></li>
 								<li><a href="#">Page 2</a></li>
 								<li><a href="#">Page 3</a></li>
@@ -277,12 +279,12 @@
 					<!-- The global file processing state -->
 					<div class="fileupload-process">
 						<div id="total-progress" class="progress progress-striped active" style="height: 34px; margin-bottom: 0px;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-							<div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+							<div class="progress-bar progress-bar-success" style="width:100%;" data-dz-uploadprogress></div>
 						</div>
 					</div>
 
 					<!-- When there is no files to upload -->
-					<p class="fileupload-noupload">There is no files to upload</p>
+					<p class="fileupload-noupload">There are no files to upload</p>
 
 					<!-- This is used as the file preview template -->
 					<div class="table table-striped files" id="fileupload-template">
@@ -319,8 +321,7 @@
 					</div>
 					
 					<!-- List of uploaded files -->
-					<hr>
-					<p>There is no uploaded files</p>
+					<hr><p>There are no uploaded files</p>
 
 
 					
@@ -415,8 +416,8 @@
 			dropzone.on("addedfile", function(file) {
 				// Hookup the start button
 				file.previewElement.querySelector(".start").onclick = function() { dropzone.enqueueFile(file); };
-				$('.files-dropdown').addClass('open');
-				$("#files .fileupload-noupload").hide();
+				$('#editor .nav-tabs a[href="#editor-files"]').tab('show');
+				$("#editor-files .fileupload-noupload").hide();
 			});
 			
 			dropzone.on("removedfile", function(file) {
