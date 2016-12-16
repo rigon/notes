@@ -52,7 +52,7 @@
 				right: 0px;
 				border-left: 1px solid gray;
 			}
-			#editor .btn {
+			#editor .btn-group .btn {
 				border: none;
 			}
 			#editor textarea {
@@ -66,6 +66,10 @@
 				right: 0px;
 				bottom: 0px;
 				width: 100%;
+			}
+			.nav > .btn-embed {
+				float: right;
+				padding: 3px;
 			}
 			.editor {
 				font-size: 14px;
@@ -192,9 +196,11 @@
 				<li role="presentation"><a href="#editor-styles" aria-controls="editor-styles" role="tab" data-toggle="tab">Styles</a></li>
 				<li role="presentation"><a href="#editor-script" aria-controls="editor-script" role="tab" data-toggle="tab">Script</a></li>
 				<li role="presentation"><a href="#editor-template" aria-controls="editor-template" role="tab" data-toggle="tab">Template</a></li>
-				<li role="presentation" style="float: right"><a href="#">Save</a></li>
-				<li role="presentation" style="float: right"><a href="#">Publish</a></li>
-				<li role="presentation" style="float: right"><a href="#">Close</a></li>
+				<li class="btn-embed">
+					<button class="btn btn-default">Close</button>
+					<button class="btn btn-info">Publish</button>
+					<button class="btn btn-primary">Save</button>
+				</li>
 			</ul>
 			<div class="tab-content">
 				<!-- Panel Editor Properties -->
@@ -240,25 +246,21 @@
 								<button class="btn btn-warning" id="properties-readonly">Make this page read-only</button>
 							</div>
 						</div>
-						
+
 						<div class="form-group">
-							<div class="col-sm-offset-2 col-sm-10">
-								<div class="dropdown">
-									<button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
-										History <span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu">
-										<li><a href="#">2016-12-12 08:43:24</a></li>
-										<li><a href="#">2016-12-12 08:43:24</a></li>
-										<li><a href="#">2016-12-12 08:43:24</a></li>
-										<li><a href="#">2016-12-12 08:43:24</a></li>
-										<li><a href="#">2016-12-12 08:43:24</a></li>
-										<li><a href="#">2016-12-12 08:43:24</a></li>
-										<li><a href="#">2016-12-12 08:43:24</a></li>
-										<li><a href="#">2016-12-12 08:43:24</a></li>
-										<li><a href="#">2016-12-12 08:43:24</a></li>
-									</ul>
-								</div>
+							<label class="col-sm-2 control-label">History</label>
+							<div class="col-sm-4">
+								<ul class="nav">
+									<li><a href="#">2016-12-12 08:43:24</a></li>
+									<li><a href="#">2016-12-12 08:43:24</a></li>
+									<li><a href="#">2016-12-12 08:43:24</a></li>
+									<li><a href="#">2016-12-12 08:43:24</a></li>
+									<li><a href="#">2016-12-12 08:43:24</a></li>
+									<li><a href="#">2016-12-12 08:43:24</a></li>
+									<li><a href="#">2016-12-12 08:43:24</a></li>
+									<li><a href="#">2016-12-12 08:43:24</a></li>
+									<li><a href="#">2016-12-12 08:43:24</a></li>
+								</ul>
 							</div>
 						</div>
 					</form>
