@@ -6,7 +6,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta charset="UTF-8">
 		
-		<link rel="stylesheet" type="text/css" href="./static/css/pagedown.css" />
 		<link rel="stylesheet" type="text/css" href="./static/css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="./static/css/font-awesome.min.css" />
 		
@@ -37,7 +36,7 @@
 				border-left: 1px solid gray;
 			}
 			#editor .nav-tabs {
-				padding-top: 9px;
+				padding: 9px 7px 0px 7px;
 			}
 			#editor .btn-group .btn {
 				border: none;
@@ -55,11 +54,10 @@
 				bottom: 0px;
 				width: 100%;
 			}
-			.nav > .btn-embed {
+			#editor .nav > .btn-nav-embed {
 				float: right;
-				padding-right: 7px;
 			}
-			.editor {
+			#editor .editor {
 				font-size: 14px;
 				border-top: 1px solid lightgray;
 				position: absolute;
@@ -98,12 +96,11 @@
 			}
 
 			/* Hide the delete button initially */
-				#previews .file-row .delete {
+			#previews .file-row .delete {
 				display: none;
 			}
 
 			/* Hide the start and cancel buttons and show the delete button */
-
 			#previews .file-row.dz-success .start,
 			#previews .file-row.dz-success .cancel {
 				display: none;
@@ -134,7 +131,7 @@
 				<li role="presentation"><a href="#editor-styles" aria-controls="editor-styles" role="tab" data-toggle="tab">Styles</a></li>
 				<li role="presentation"><a href="#editor-script" aria-controls="editor-script" role="tab" data-toggle="tab">Script</a></li>
 				<li role="presentation"><a href="#editor-template" aria-controls="editor-template" role="tab" data-toggle="tab">Template</a></li>
-				<li class="btn-embed">
+				<li class="btn-nav-embed">
 					<button class="btn btn-default">Close</button>
 					<button class="btn btn-info">Publish</button>
 					<button class="btn btn-primary">Save</button>
