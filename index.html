@@ -1,22 +1,14 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>$file_name - Spmdwe Editor</title>
+		<title>Editing page - Spmdwe Editor</title>
 		
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta charset="UTF-8">
 		
 		<link rel="stylesheet" type="text/css" href="./static/css/pagedown.css" />
 		<link rel="stylesheet" type="text/css" href="./static/css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="./static/css/font-awesome.min.css" />
-		
-		
-		<script type="text/javascript" src="./static/js/Markdown.Converter.js"></script>
-		<script type="text/javascript" src="./static/js/Markdown.Sanitizer.js"></script>
-		<script type="text/javascript" src="./static/js/Markdown.Editor.js"></script>
-		<script type="text/javascript" src="./static/js/Markdown.Extra.js"></script>
-		<script type="text/javascript" src="./static/js/MathJax-edit.js"></script>
-		<!-- <script type="text/javascript" src="static/js/call-mathjax-edit.js"></script> -->
-
 		
 		<script src="./static/js/jquery-1.11.1.min.js"></script>
 		<script src="./static/js/bootstrap.min.js"></script>
@@ -44,6 +36,9 @@
 				right: 0px;
 				border-left: 1px solid gray;
 			}
+			#editor .nav-tabs {
+				padding-top: 9px;
+			}
 			#editor .btn-group .btn {
 				border: none;
 				border-radius: 0px;
@@ -55,7 +50,7 @@
 				padding: 15px;
 				overflow: auto;
 				position: absolute;
-				top: 41px;
+				top: 51px;
 				right: 0px;
 				bottom: 0px;
 				width: 100%;
@@ -68,7 +63,7 @@
 				font-size: 14px;
 				border-top: 1px solid lightgray;
 				position: absolute;
-				top: 74px;
+				top: 84px;
 				right: 0px;
 				bottom: 0px;
 				width: 100%;
@@ -132,7 +127,7 @@
 		<div id="editor">
 
 			<!-- Nav tabs -->
-			<ul class="nav nav-tabs" role="tablist">
+			<ul class="nav nav-tabs navbar-default" role="tablist">
 				<li role="presentation" class="active"><a href="#editor-page" aria-controls="editor-page" role="tab" data-toggle="tab">Page</a></li>
 				<li role="presentation"><a href="#editor-text" aria-controls="editor-text" role="tab" data-toggle="tab">Text</a></li>
 				<li role="presentation"><a href="#editor-files" aria-controls="editor-files" role="tab" data-toggle="tab">Files</a></li>
@@ -222,7 +217,9 @@
 						<button type="button" class="btn btn-default"><span class="fa fa-image"></span></button>
 						<button type="button" class="btn btn-default"><span class="fa fa-link"></span></button>
 						<div class="btn-group" role="group">
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-file-text"></span> <span class="caret"></button>
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="fa fa-file-text"></span> <span class="caret">
+							</button>
 							<ul class="dropdown-menu">
 								<li><a href="#">Page 1</a></li>
 								<li><a href="#">Page 2</a></li>
@@ -286,6 +283,50 @@
 							<div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
 						</div>
 					</div>
+
+					<!-- When there is no files to upload -->
+					<p class="fileupload-noupload">There is no files to upload</p>
+
+					<!-- This is used as the file preview template -->
+					<div class="table table-striped files" id="fileupload-template">
+						<div class="file-row">
+							<div class="media">
+								<div class="media-body" style="width: 100%">
+									<h4 class="media-heading name" data-dz-name></h4>
+
+									<span class="size label label-info" style="float: left; margin-right: 15px; height: 30px; min-width: 50px; padding: 9px 6px 9px 6px;" data-dz-size></span>
+									
+									<div style="float: left; margin-right: 15px">
+										<button class="btn btn-primary btn-sm start" title="Start">
+											<i class="glyphicon glyphicon-upload"></i>
+										</button>
+										<button data-dz-remove class="btn btn-warning btn-sm cancel" title="Cancel">
+											<i class="glyphicon glyphicon-ban-circle"></i>
+										</button>
+										<button data-dz-remove class="btn btn-danger btn-sm delete" title="Delete">
+											<i class="glyphicon glyphicon-trash"></i>
+										</button>
+									</div>
+									
+									<div class="progress progress-striped active" style="height: 30px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+										<div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
+									</div>
+										
+									<strong class="error text-danger" data-dz-errormessage></strong>
+								</div>
+								<div class="media-right">
+									<img class="media-object" data-dz-thumbnail />
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- List of uploaded files -->
+					<hr>
+					<p>There is no uploaded files</p>
+
+
+					
 			
 				</div>
 
@@ -353,165 +394,37 @@
 
 			</div>
 		</div>
-		
-		
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		<!-- Template editor -->
-		<div id="template_edit" class="modal fade" tabindex="-1" role="document">
-			<div class="modal-dialog" role="document" style="width: 80%;">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title">Edit template</h4>
-					</div>
-					<div class="modal-body">
-						<div class="form-group">
-							<div class="form-control" id="template_edit_textarea" style="height: 70vh; max-width: 100%; min-width: 100%;"><?php echo $template_file; ?></div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="button" id="template_save" class="btn btn-primary">Save</button>
-						<button type="button" id="template_preview" class="btn btn-info">Preview</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<script type="text/javascript">
-			var templateEditor = ace.edit("template_edit_textarea");
-			templateEditor.setTheme("ace/theme/crimson_editor");
-			templateEditor.getSession().setMode("ace/mode/php");
-			templateEditor.setShowPrintMargin(false);
-			document.getElementById('template_edit_textarea').style.fontSize='13px';
-		</script>
-		
-		<script type="text/javascript">
-			var mode = "<?php echo $file_mode; ?>";
-			var markdown = <?php echo json_encode($file_contents); ?>;
-			
-			window.onload = function() {
-				var converter = new Markdown.Converter();
-				
-				Markdown.Extra.init(converter, {
-					extensions: ["fenced_code_gfm", "tables", "def_list", "attr_list", "footnotes", "smartypants", "newlines", "strikethrough"],
-					table_class: "table table-striped",
-				});
-				
-				// Fills the viewer with HTML
-				$("#wmd-preview-editor").html(converter.makeHtml(markdown));
-				
-				if(mode == 'edit') {
-					// Sets textarea with the text
-					$("#wmd-input-editor").val(markdown);
-					
-					// Creates the editor
-					var editor = new Markdown.Editor(converter, "-editor", {
-						handler: function() {
-							alert("Do you need help? Try http://stackoverflow.com/editing-help");
-						}
-					});
-					editor.run();
-					
-					
-					// Fix width of editor
-					$('.editor-container').width($('#editor').width() - 15);
-					$( window ).resize(function() {
-						$('.editor-container').width($('#editor').width() - 15);
-					});
-				}
-			}
-		
-			$("#download_html").click(function() {
-				$(this).attr("href", "data:text/plain;charset=utf-8," + encodeURIComponent($("#wmd-preview-editor").html()));
-				$(this).attr("download", "<?php echo $file_name; ?>.html");
-				$(this).click();
-			});
-			$("#download_markdown").click(function() {
-				$(this).attr("href", "data:text/plain;charset=utf-8," + encodeURIComponent( mode=="edit" ? $("#wmd-input-editor").val() : markdown));
-				$(this).attr("download", "<?php echo $file_name; ?>.md");
-				$(this).click();
-			});
-			
-			$("#template_edit_button").click(function() {
-				$("#template_edit").modal('show');
-			});
-			
-			$("#template_save").click(function() {
-				$.post("<?php echo $baseurl; ?>?mode=template_save", {
-					template: templateEditor.getValue()
-				}).done(function(data) {
-					alert(data);
-				});
-			});
-			
-			$("#template_preview").click(function() {
-				$.post("<?php echo $baseurl; ?>?preview", {
-					template: templateEditor.getValue()
-				}).done(function(data) {
-					var previewWindow = window.open("", "spmdwe_preview");
-					previewWindow.document.open();
-					previewWindow.document.write(data);
-					previewWindow.document.close();
-				});
-			});
-			
-			$("#publish").click(function() {
-				$.post("<?php echo $baseurl; ?>?mode=publish", {
-					html: $("#wmd-preview-editor").html()
-				}).done(function(data) {
-					alert(data);
-				});
-			});
-		
-			$("#view_log").click(function() {
-				alert('<?php echo $message; ?>');
-			});
-		</script>
 		
 		<script type="text/javascript">
 			// Disable auto discover for all elements:
 			Dropzone.autoDiscover = false;
-			// Get the template HTML and remove it from the doument
-			var previewTemplate = $("#previews").html();
-			$("#previews").empty();
+			// Get the template HTML and remove it from the document
+			var previewTemplate = $("#fileupload-template").html();
+			$("#fileupload-template").empty();
 
 			var dropzone = new Dropzone(document.documentElement, {		// Make the whole document a dropzone
-				url: "<?php echo $baseurl; ?>",	// Set the url
-				maxFilesize: <?php echo max_upload(); ?>,
+				url: "http://www.example.com/urltosend",	// Set the url
+				maxFilesize: 52,
 				thumbnailWidth: 80,
 				thumbnailHeight: 80,
-				parallelUploads: 30,
-				previewTemplate: previewTemplate,
-				autoQueue: false,				// Make sure the files aren't queued until manually added
-				previewsContainer: "#previews",	// Define the container to display the previews
-				clickable: ".fileinput-button",	// Define the element that should be used as click trigger to select files.
+				parallelUploads: 3,
+				previewTemplate: previewTemplate,			// HTML template for new uploads
+				autoQueue: false,							// Make sure the files aren't queued until manually added
+				previewsContainer: "#fileupload-template",	// Define the container to display the previews
+				clickable: ".fileinput-button",				// Define the element that should be used as click trigger to select files.
 			});
 
 			dropzone.on("addedfile", function(file) {
 				// Hookup the start button
 				file.previewElement.querySelector(".start").onclick = function() { dropzone.enqueueFile(file); };
 				$('.files-dropdown').addClass('open');
-				$("#files .files-noupload").hide();
+				$("#files .fileupload-noupload").hide();
 			});
 			
 			dropzone.on("removedfile", function(file) {
 				if(this.getQueuedFiles().length + this.getUploadingFiles().length + this.getRejectedFiles().length < 1)
-					$("#files .files-noupload").show();
+					$("#files .fileupload-noupload").show();
 			});
 
 			// Update the total progress bar
