@@ -262,15 +262,15 @@
 				<div role="tabpanel" class="tab-pane" id="editor-files">
 					<div style="float: left; padding-right: 15px">
 					<!-- The fileinput-button span is used to style the file input field as button -->
-						<button class="btn btn-success fileinput-button">
+						<button class="btn btn-success fileinput-button" id="editor-files-add">
 							<i class="glyphicon glyphicon-plus"></i>
 							<span>Add files...</span>
 						</button>
-						<button type="submit" class="btn btn-primary start">
+						<button type="submit" class="btn btn-primary start" id="editor-files-start">
 							<i class="glyphicon glyphicon-upload"></i>
 							<span>Upload</span>
 						</button>
-						<button type="reset" class="btn btn-warning cancel">
+						<button type="reset" class="btn btn-warning cancel" id="editor-files-cancel">
 							<i class="glyphicon glyphicon-ban-circle"></i>
 							<span>Cancel all</span>
 						</button>
@@ -279,7 +279,7 @@
 					<!-- The global file processing state -->
 					<div class="fileupload-process">
 						<div id="total-progress" class="progress progress-striped active" style="height: 34px; margin-bottom: 0px;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-							<div class="progress-bar progress-bar-success" style="width:100%;" data-dz-uploadprogress></div>
+							<div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
 						</div>
 					</div>
 
@@ -410,7 +410,7 @@
 				previewTemplate: previewTemplate,			// HTML template for new uploads
 				autoQueue: false,							// Make sure the files aren't queued until manually added
 				previewsContainer: "#fileupload-template",	// Define the container to display the previews
-				clickable: ".fileinput-button",				// Define the element that should be used as click trigger to select files.
+				clickable: "#editor-files-add",				// Define the element that should be used as click trigger to select files.
 			});
 
 			dropzone.on("addedfile", function(file) {
@@ -446,13 +446,13 @@
 			// Setup the buttons for all transfers
 			// The "add files" button doesn't need to be setup because the config
 			// `clickable` has already been specified.
-			$("#files .start").click(function() {
+			$("#editor-files-start").click(function() {
 				dropzone.enqueueFiles(dropzone.getFilesWithStatus(Dropzone.ADDED));
 			});
-			$("#files .cancel").click(function() {
+			$("#editor-files-cancel").click(function() {
 				dropzone.removeAllFiles(true);
 			});
-			$("#files").click(function (e) {
+			$("#editor-files").click(function (e) {
 				e.stopPropagation();
 			});
 		</script>
