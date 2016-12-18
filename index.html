@@ -34,6 +34,7 @@
 			#editor {
 				right: 0px;
 				border-left: 1px solid gray;
+				background-color: white;
 			}
 			#editor .nav-tabs {
 				padding: 9px 7px 0px 7px;
@@ -240,10 +241,9 @@
 						<button type="button" class="btn btn-default" title="Redo"><span class="fa fa-repeat"></span></button>
 					</div>
 					<div class="btn-group" role="group" style="float: right">
-						<button type="button" class="btn btn-default" title="Help"><span class="fa fa-info-circle"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
+						<button type="button" class="btn btn-default btn-help" title="Help"><span class="fa fa-info-circle"></span></button>
+						<button type="button" class="btn btn-default btn-detachpreview" title="Detach/Atach preview in a new window"><span class="fa fa-window-restore"></span></button>
+						<button type="button" class="btn btn-default btn-maximize" title="Maximize editor and hide preview"><span class="fa fa-window-maximize"></span></button>
 						<button type="button" class="btn btn-default btn-fullscreen"><span class="fa fa-expand"></span></button>
 					</div>
 
@@ -332,10 +332,9 @@
 				<!-- Panel Editor Styles -->
 				<div role="tabpanel" class="tab-pane" id="editor-styles">
 					<div class="btn-group" role="group" style="float: right">
-						<button type="button" class="btn btn-default"><span class="fa fa-info-circle"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
+						<button type="button" class="btn btn-default btn-help" title="Help"><span class="fa fa-info-circle"></span></button>
+						<button type="button" class="btn btn-default btn-detachpreview" title="Detach/Atach preview in a new window"><span class="fa fa-window-restore"></span></button>
+						<button type="button" class="btn btn-default btn-maximize" title="Maximize editor and hide preview"><span class="fa fa-window-maximize"></span></button>
 						<button type="button" class="btn btn-default btn-fullscreen"><span class="fa fa-expand"></span></button>
 					</div>
 
@@ -353,10 +352,9 @@
 				<div role="tabpanel" class="tab-pane" id="editor-script">
 					
 					<div class="btn-group" role="group" style="float: right">
-						<button type="button" class="btn btn-default"><span class="fa fa-info-circle"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
+						<button type="button" class="btn btn-default btn-help" title="Help"><span class="fa fa-info-circle"></span></button>
+						<button type="button" class="btn btn-default btn-detachpreview" title="Detach/Atach preview in a new window"><span class="fa fa-window-restore"></span></button>
+						<button type="button" class="btn btn-default btn-maximize" title="Maximize editor and hide preview"><span class="fa fa-window-maximize"></span></button>
 						<button type="button" class="btn btn-default btn-fullscreen"><span class="fa fa-expand"></span></button>
 					</div>
 
@@ -374,10 +372,9 @@
 				<div role="tabpanel" class="tab-pane" id="editor-template">
 					
 					<div class="btn-group" role="group" style="float: right">
-						<button type="button" class="btn btn-default"><span class="fa fa-info-circle"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
+						<button type="button" class="btn btn-default btn-help" title="Help"><span class="fa fa-info-circle"></span></button>
+						<button type="button" class="btn btn-default btn-detachpreview" title="Detach/Atach preview in a new window"><span class="fa fa-window-restore"></span></button>
+						<button type="button" class="btn btn-default btn-maximize" title="Maximize editor and hide preview"><span class="fa fa-window-maximize"></span></button>
 						<button type="button" class="btn btn-default btn-fullscreen"><span class="fa fa-expand"></span></button>
 					</div>
 
@@ -396,18 +393,28 @@
 
 
 		<script type="text/javascript">
+			$(".btn-maximize").click(function() {
+				if(($("#editor").width() / $('body').width()) < 0.75) {
+					$("#editor").css("width", "100%");
+					$(".btn-maximize span").attr("class", "fa fa-columns");
+				}
+				else {
+					$("#editor").css("width", "50%");
+					$(".btn-maximize span").attr("class", "fa fa-window-maximize");
+				}
+			});
+
 			$(".btn-fullscreen").click(function() {
-				if ((document.fullScreenElement && document.fullScreenElement !== null) ||
-				(!document.mozFullScreen && !document.webkitIsFullScreen)) {
-					if (document.documentElement.requestFullScreen) document.documentElement.requestFullScreen();
-					else if (document.documentElement.mozRequestFullScreen) document.documentElement.mozRequestFullScreen();
-					else if (document.documentElement.webkitRequestFullScreen) document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+				if((document.fullScreenElement && document.fullScreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+					if(document.documentElement.requestFullScreen) document.documentElement.requestFullScreen();
+					else if(document.documentElement.mozRequestFullScreen) document.documentElement.mozRequestFullScreen();
+					else if(document.documentElement.webkitRequestFullScreen) document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
 					$(".btn-fullscreen span").attr("class", "fa fa-compress");
 				}
-				else {  
-					if (document.cancelFullScreen) document.cancelFullScreen();
-					else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
-					else if (document.webkitCancelFullScreen) document.webkitCancelFullScreen();
+				else {
+					if(document.cancelFullScreen) document.cancelFullScreen();
+					else if(document.mozCancelFullScreen) document.mozCancelFullScreen();
+					else if(document.webkitCancelFullScreen) document.webkitCancelFullScreen();
 					$(".btn-fullscreen span").attr("class", "fa fa-expand");
 				}
 			});
