@@ -205,20 +205,20 @@
 				<!-- Panel Editor Page -->
 				<div role="tabpanel" class="tab-pane" id="editor-text">
 					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-default"><span class="fa fa-bold"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-italic"></span></button>
+						<button type="button" class="btn btn-default" title="Bold"><span class="fa fa-bold"></span></button>
+						<button type="button" class="btn btn-default" title="Italic"><span class="fa fa-italic"></span></button>
 					</div>
 					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-default"><span class="fa fa-quote-left"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-code"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-image"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-link"></span></button>
-						<div class="btn-group" role="group">
+						<button type="button" class="btn btn-default" title="Quote text"><span class="fa fa-quote-left"></span></button>
+						<button type="button" class="btn btn-default" title="Block of code"><span class="fa fa-code"></span></button>
+						<button type="button" class="btn btn-default" title="Add image"><span class="fa fa-image"></span></button>
+						<button type="button" class="btn btn-default" title="Hyperlink"><span class="fa fa-link"></span></button>
+						<div class="btn-group" role="group" title="Link for pages">
 							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<span class="fa fa-file-text"></span> <span class="caret">
 							</button>
 							<ul class="dropdown-menu">
-								<li><a href="#">Custom page</a></li>
+								<li><a href="#">New Page</a></li>
 								<li class="divider"></li>
 								<li><a href="#">Page 1</a></li>
 								<li><a href="#">Page 2</a></li>
@@ -230,21 +230,21 @@
 						</div>
 					</div>
 					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-default"><span class="fa fa-list-ol"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-list-ul"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-header"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-table"></span></button>
+						<button type="button" class="btn btn-default" title="Ordered list"><span class="fa fa-list-ol"></span></button>
+						<button type="button" class="btn btn-default" title="Unordered list"><span class="fa fa-list-ul"></span></button>
+						<button type="button" class="btn btn-default" title="Header"><span class="fa fa-header"></span></button>
+						<button type="button" class="btn btn-default" title="Table"><span class="fa fa-table"></span></button>
 					</div>
 					<div class="btn-group" role="group">
-						<button type="button" class="btn btn-default"><span class="fa fa-undo"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-repeat"></span></button>
+						<button type="button" class="btn btn-default" title="Undo"><span class="fa fa-undo"></span></button>
+						<button type="button" class="btn btn-default" title="Redo"><span class="fa fa-repeat"></span></button>
 					</div>
 					<div class="btn-group" role="group" style="float: right">
-						<button type="button" class="btn btn-default"><span class="fa fa-info-circle"></span></button>
+						<button type="button" class="btn btn-default" title="Help"><span class="fa fa-info-circle"></span></button>
 						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
 						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
 						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-expand"></span></button>
+						<button type="button" class="btn btn-default btn-fullscreen"><span class="fa fa-expand"></span></button>
 					</div>
 
 					<div id="markdown-editor" class="editor"></div>
@@ -336,7 +336,7 @@
 						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
 						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
 						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-expand"></span></button>
+						<button type="button" class="btn btn-default btn-fullscreen"><span class="fa fa-expand"></span></button>
 					</div>
 
 					<div id="css-editor" class="editor"></div>
@@ -357,7 +357,7 @@
 						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
 						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
 						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-expand"></span></button>
+						<button type="button" class="btn btn-default btn-fullscreen"><span class="fa fa-expand"></span></button>
 					</div>
 
 					<div id="js-editor" class="editor"></div>
@@ -378,7 +378,7 @@
 						<button type="button" class="btn btn-default"><span class="fa fa-window-maximize"></span></button>
 						<button type="button" class="btn btn-default"><span class="fa fa-columns"></span></button>
 						<button type="button" class="btn btn-default"><span class="fa fa-window-restore"></span></button>
-						<button type="button" class="btn btn-default"><span class="fa fa-expand"></span></button>
+						<button type="button" class="btn btn-default btn-fullscreen"><span class="fa fa-expand"></span></button>
 					</div>
 
 					<div id="handlebars-editor" class="editor"></div>
@@ -392,6 +392,34 @@
 
 			</div>
 		</div>
+
+
+
+		<script type="text/javascript">
+			$(".btn-fullscreen").click(function() {
+				toggleFullScreen();
+			});
+
+			function toggleFullScreen() {
+				if ((document.fullScreenElement && document.fullScreenElement !== null) ||
+				(!document.mozFullScreen && !document.webkitIsFullScreen)) {
+					if (document.documentElement.requestFullScreen)
+						document.documentElement.requestFullScreen();
+					else if (document.documentElement.mozRequestFullScreen)
+						document.documentElement.mozRequestFullScreen();
+					else if (document.documentElement.webkitRequestFullScreen)
+						document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+				}
+				else {  
+					if (document.cancelFullScreen)
+						document.cancelFullScreen();
+					else if (document.mozCancelFullScreen)
+						document.mozCancelFullScreen();
+					else if (document.webkitCancelFullScreen)
+						document.webkitCancelFullScreen();
+				}
+			}
+		</script>
 
 		
 		<script type="text/javascript">
