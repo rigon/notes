@@ -46,7 +46,7 @@
 			#editor textarea {
 				resize: vertical;
 			}
-			#editor .editor, #editor-files {
+			#editor .editor, #editor .editor-ace {
 				border-top: 1px solid lightgray;
 				overflow: auto;
 				position: absolute;
@@ -56,10 +56,10 @@
 				width: 100%;
 			}
 			#editor .editor {
-				font-size: 14px;
-			}
-			#editor form, #editor-files {
 				padding: 15px;
+			}
+			#editor .editor-ace {
+				font-size: 14px;
 			}
 
 
@@ -144,7 +144,7 @@
 				<!-- Panel Editor Properties -->
 				<div role="tabpanel" class="tab-pane active" id="editor-page">
 					<div class="btn-group" role="group">
-						<div class="btn-group" role="group" title="Link for pages">
+						<div class="btn-group" role="group" title="History">
 							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<span class="fa fa-history"></span> History <span class="caret">
 							</button>
@@ -164,7 +164,7 @@
 						</div>
 						
 						<div class="btn-group" role="group">
-							<div class="btn-group" role="group" title="Link for pages">
+							<div class="btn-group" role="group" title="Download">
 								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									<span class="fa fa-cloud-download"></span> Download <span class="caret">
 								</button>
@@ -177,9 +177,9 @@
 						</div>
 
 						<div class="btn-group" role="group">
-							<div class="btn-group" role="group" title="Link for pages">
+							<div class="btn-group" role="group" title="Share">
 								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<span class="fa fa-share"></span> Share <span class="caret">
+									<span class="fa fa-share-alt"></span> Share <span class="caret">
 								</button>
 								<ul class="dropdown-menu">
 									<li><a href="#"><span class="fa fa-chain-broken"></span> Create private link</a></li>
@@ -276,7 +276,7 @@
 						<button type="button" class="btn btn-default" title="Redo"><span class="fa fa-repeat"></span></button>
 					</div>
 
-					<div id="markdown-editor" class="editor"></div>
+					<div id="markdown-editor" class="editor-ace"></div>
 					<script type="text/javascript">
 						var markdownEditor = ace.edit("markdown-editor");
 						markdownEditor.setTheme("ace/theme/dreamweaver");
@@ -289,69 +289,62 @@
 
 				<!-- Panel Files -->
 				<div role="tabpanel" class="tab-pane" id="editor-files">
-					<div style="float: left; padding-right: 15px">
-					<!-- The fileinput-button span is used to style the file input field as button -->
-						<button class="btn btn-success fileinput-button" id="editor-files-add">
-							<i class="glyphicon glyphicon-plus"></i>
-							<span>Add files...</span>
-						</button>
-						<button type="submit" class="btn btn-primary start" id="editor-files-start">
-							<i class="glyphicon glyphicon-upload"></i>
-							<span>Upload</span>
-						</button>
-						<button type="reset" class="btn btn-warning cancel" id="editor-files-cancel">
-							<i class="glyphicon glyphicon-ban-circle"></i>
-							<span>Cancel all</span>
-						</button>
+
+					<div class="btn-group" role="group">
+						<!-- The fileinput-button span is used to style the file input field as button -->
+						<button class="btn btn-default" id="editor-files-add"><i class="glyphicon glyphicon-plus"></i> Add files...</button>
+						<button class="btn btn-default" id="editor-files-start"><i class="glyphicon glyphicon-upload"></i> Upload</button>
+						<button class="btn btn-default" id="editor-files-cancel"><i class="glyphicon glyphicon-ban-circle"></i> Cancel all</button>
 					</div>
 
-					<!-- The global file processing state -->
-					<div class="fileupload-process">
-						<div id="total-progress" class="progress progress-striped active" style="height: 34px; margin-bottom: 0px;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-							<div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
+					<div class="editor">
+						<!-- The global file processing state -->
+						<div class="fileupload-process">
+							<div id="total-progress" class="progress progress-striped active" style="height: 34px; margin-bottom: 0px;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+								<div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
+							</div>
 						</div>
-					</div>
 
-					<!-- When there is no files to upload -->
-					<p class="fileupload-noupload">There are no files to upload</p>
+						<!-- When there is no files to upload -->
+						<p class="fileupload-noupload">There are no files to upload</p>
 
-					<!-- This is used as the file preview template -->
-					<div class="table table-striped files" id="fileupload-template">
-						<div class="file-row">
-							<div class="media">
-								<div class="media-body" style="width: 100%">
-									<h4 class="media-heading name" data-dz-name></h4>
+						<!-- This is used as the file preview template -->
+						<div class="table table-striped files" id="fileupload-template">
+							<div class="file-row">
+								<div class="media">
+									<div class="media-body" style="width: 100%">
+										<h4 class="media-heading name" data-dz-name></h4>
 
-									<span class="size label label-info" style="float: left; margin-right: 15px; height: 30px; min-width: 50px; padding: 9px 6px 9px 6px;" data-dz-size></span>
-									
-									<div style="float: left; margin-right: 15px">
-										<button class="btn btn-primary btn-sm start" title="Start">
-											<i class="glyphicon glyphicon-upload"></i>
-										</button>
-										<button data-dz-remove class="btn btn-warning btn-sm cancel" title="Cancel">
-											<i class="glyphicon glyphicon-ban-circle"></i>
-										</button>
-										<button data-dz-remove class="btn btn-danger btn-sm delete" title="Delete">
-											<i class="glyphicon glyphicon-trash"></i>
-										</button>
-									</div>
-									
-									<div class="progress progress-striped active" style="height: 30px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-										<div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
-									</div>
+										<span class="size label label-info" style="float: left; margin-right: 15px; height: 30px; min-width: 50px; padding: 9px 6px 9px 6px;" data-dz-size></span>
 										
-									<strong class="error text-danger" data-dz-errormessage></strong>
-								</div>
-								<div class="media-right">
-									<img class="media-object" data-dz-thumbnail />
+										<div style="float: left; margin-right: 15px">
+											<button class="btn btn-primary btn-sm start" title="Start">
+												<i class="glyphicon glyphicon-upload"></i>
+											</button>
+											<button data-dz-remove class="btn btn-warning btn-sm cancel" title="Cancel">
+												<i class="glyphicon glyphicon-ban-circle"></i>
+											</button>
+											<button data-dz-remove class="btn btn-danger btn-sm delete" title="Delete">
+												<i class="glyphicon glyphicon-trash"></i>
+											</button>
+										</div>
+										
+										<div class="progress progress-striped active" style="height: 30px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+											<div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
+										</div>
+											
+										<strong class="error text-danger" data-dz-errormessage></strong>
+									</div>
+									<div class="media-right">
+										<img class="media-object" data-dz-thumbnail />
+									</div>
 								</div>
 							</div>
 						</div>
+						
+						<!-- List of uploaded files -->
+						<hr><p>There are no uploaded files</p>
 					</div>
-					
-					<!-- List of uploaded files -->
-					<hr><p>There are no uploaded files</p>
-
 
 					
 			
@@ -361,7 +354,7 @@
 				<!-- Panel Editor Styles -->
 				<div role="tabpanel" class="tab-pane" id="editor-styles">
 
-					<div id="css-editor" class="editor"></div>
+					<div id="css-editor" class="editor-ace"></div>
 					<script type="text/javascript">
 						var cssEditor = ace.edit("css-editor");
 						cssEditor.setTheme("ace/theme/dreamweaver");
@@ -374,7 +367,7 @@
 				<!-- Panel Editor Script -->
 				<div role="tabpanel" class="tab-pane" id="editor-script">
 
-					<div id="js-editor" class="editor"></div>
+					<div id="js-editor" class="editor-ace"></div>
 					<script type="text/javascript">
 						var jsEditor = ace.edit("js-editor");
 						jsEditor.setTheme("ace/theme/dreamweaver");
@@ -387,7 +380,7 @@
 				<!-- Panel Editor Template -->
 				<div role="tabpanel" class="tab-pane" id="editor-template">
 
-					<div id="handlebars-editor" class="editor"></div>
+					<div id="handlebars-editor" class="editor-ace"></div>
 					<script type="text/javascript">
 						var jsEditor = ace.edit("handlebars-editor");
 						jsEditor.setTheme("ace/theme/dreamweaver");
