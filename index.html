@@ -26,7 +26,7 @@
 				left: 0px;
 			}
 			#preview {
-				position:absolute; 
+				position: absolute; 
 				width: 100%;
 				height: 100%;
 				border: none;
@@ -39,7 +39,7 @@
 			#editor .nav-tabs {
 				padding: 9px 7px 0px 7px;
 			}
-			#editor .btn-group .btn {
+			#editor .toolbar .btn {
 				border: none;
 				border-radius: 0px;
 			}
@@ -133,7 +133,7 @@
 				</li>
 			</ul>
 
-			<div class="btn-group pull-right" role="group">
+			<div class="btn-group toolbar pull-right" role="group">
 				<button type="button" class="btn btn-default btn-help" title="Help"><span class="fa fa-info-circle"></span></button>
 				<button type="button" class="btn btn-default btn-detachpreview" title="Detach/Atach preview in a new window"><span class="fa fa-window-restore"></span></button>
 				<button type="button" class="btn btn-default btn-maximize" title="Maximize editor and hide preview"><span class="fa fa-window-maximize"></span></button>
@@ -143,7 +143,7 @@
 			<div class="tab-content">
 				<!-- Panel Editor Properties -->
 				<div role="tabpanel" class="tab-pane active" id="editor-page">
-					<div class="btn-group" role="group">
+					<div class="btn-group toolbar" role="group">
 						<div class="btn-group" role="group" title="History">
 							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<span class="fa fa-history"></span> History <span class="caret">
@@ -240,11 +240,11 @@
 
 				<!-- Panel Editor Page -->
 				<div role="tabpanel" class="tab-pane" id="editor-text">
-					<div class="btn-group" role="group">
+					<div class="btn-group toolbar" role="group">
 						<button type="button" class="btn btn-default" title="Bold"><span class="fa fa-bold"></span></button>
 						<button type="button" class="btn btn-default" title="Italic"><span class="fa fa-italic"></span></button>
 					</div>
-					<div class="btn-group" role="group">
+					<div class="btn-group toolbar" role="group">
 						<button type="button" class="btn btn-default" title="Quote text"><span class="fa fa-quote-left"></span></button>
 						<button type="button" class="btn btn-default" title="Block of code"><span class="fa fa-code"></span></button>
 						<button type="button" class="btn btn-default" title="Add image"><span class="fa fa-image"></span></button>
@@ -265,13 +265,13 @@
 							</ul>
 						</div>
 					</div>
-					<div class="btn-group" role="group">
+					<div class="btn-group toolbar" role="group">
 						<button type="button" class="btn btn-default" title="Ordered list"><span class="fa fa-list-ol"></span></button>
 						<button type="button" class="btn btn-default" title="Unordered list"><span class="fa fa-list-ul"></span></button>
 						<button type="button" class="btn btn-default" title="Header"><span class="fa fa-header"></span></button>
 						<button type="button" class="btn btn-default" title="Table"><span class="fa fa-table"></span></button>
 					</div>
-					<div class="btn-group" role="group">
+					<div class="btn-group toolbar" role="group">
 						<button type="button" class="btn btn-default" title="Undo"><span class="fa fa-undo"></span></button>
 						<button type="button" class="btn btn-default" title="Redo"><span class="fa fa-repeat"></span></button>
 					</div>
@@ -290,20 +290,21 @@
 				<!-- Panel Files -->
 				<div role="tabpanel" class="tab-pane" id="editor-files">
 
-					<div class="btn-group" role="group">
+					<div class="btn-group toolbar" role="group">
 						<!-- The fileinput-button span is used to style the file input field as button -->
-						<button class="btn btn-default" id="editor-files-add"><i class="glyphicon glyphicon-plus"></i> Add files...</button>
-						<button class="btn btn-default" id="editor-files-start"><i class="glyphicon glyphicon-upload"></i> Upload</button>
-						<button class="btn btn-default" id="editor-files-cancel"><i class="glyphicon glyphicon-ban-circle"></i> Cancel all</button>
+						<button class="btn btn-default" id="editor-files-add"><span class="fa fa-plus"></span> Add files...</button>
+						<button class="btn btn-default" id="editor-files-start"><span class="fa fa-upload"></span> Upload</button>
+						<button class="btn btn-default" id="editor-files-cancel"><span class="fa fa-ban"></span> Cancel all</button>
+					</div>
+
+					<!-- The global file processing state -->
+					<div class="fileupload-process">
+						<div id="total-progress" class="progress progress-striped active" style="height: 34px; margin-bottom: 0px;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+							<div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
+						</div>
 					</div>
 
 					<div class="editor">
-						<!-- The global file processing state -->
-						<div class="fileupload-process">
-							<div id="total-progress" class="progress progress-striped active" style="height: 34px; margin-bottom: 0px;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-								<div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
-							</div>
-						</div>
 
 						<!-- When there is no files to upload -->
 						<p class="fileupload-noupload">There are no files to upload</p>
@@ -313,23 +314,17 @@
 							<div class="file-row">
 								<div class="media">
 									<div class="media-body" style="width: 100%">
-										<h4 class="media-heading name" data-dz-name></h4>
 
-										<span class="size label label-info" style="float: left; margin-right: 15px; height: 30px; min-width: 50px; padding: 9px 6px 9px 6px;" data-dz-size></span>
-										
-										<div style="float: left; margin-right: 15px">
-											<button class="btn btn-primary btn-sm start" title="Start">
-												<i class="glyphicon glyphicon-upload"></i>
-											</button>
-											<button data-dz-remove class="btn btn-warning btn-sm cancel" title="Cancel">
-												<i class="glyphicon glyphicon-ban-circle"></i>
-											</button>
-											<button data-dz-remove class="btn btn-danger btn-sm delete" title="Delete">
-												<i class="glyphicon glyphicon-trash"></i>
-											</button>
+										<div class="btn-group pull-right">
+											<button data-dz-size class="btn btn-default btn-sm" disabled></button>
+											<button class="btn btn-primary btn-sm start" title="Start"><span class="fa fa-upload"></span></button>
+											<button data-dz-remove class="btn btn-warning btn-sm cancel" title="Cancel"><span class="fa fa-ban"></span></button>
+											<button data-dz-remove class="btn btn-danger btn-sm delete" title="Delete"><span class="fa fa-trash"></span></button>
 										</div>
+										<p class="media-heading name" data-dz-name></p>
 										
-										<div class="progress progress-striped active" style="height: 30px" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+										
+										<div class="progress progress-striped active" style="height: 30px; clear: both" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
 											<div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
 										</div>
 											
@@ -432,7 +427,7 @@
 
 			var dropzone = new Dropzone(document.documentElement, {		// Make the whole document a dropzone
 				url: "http://www.example.com/urltosend",	// Set the url
-				maxFilesize: 52,
+				maxFilesize: 52,							// TODO
 				thumbnailWidth: 80,
 				thumbnailHeight: 80,
 				parallelUploads: 3,
@@ -451,7 +446,7 @@
 			
 			dropzone.on("removedfile", function(file) {
 				if(this.getQueuedFiles().length + this.getUploadingFiles().length + this.getRejectedFiles().length < 1)
-					$("#files .fileupload-noupload").show();
+					$("#editor-files .fileupload-noupload").show();
 			});
 
 			// Update the total progress bar
