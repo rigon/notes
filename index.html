@@ -46,26 +46,20 @@
 			#editor textarea {
 				resize: vertical;
 			}
-			#editor-page, #editor-files {
-				padding: 15px;
-				overflow: auto;
-				position: absolute;
-				top: 51px;
-				right: 0px;
-				bottom: 0px;
-				width: 100%;
-			}
-			#editor .nav > .btn-nav-embed {
-				float: right;
-			}
-			#editor .editor {
-				font-size: 14px;
+			#editor .editor, #editor-files {
 				border-top: 1px solid lightgray;
+				overflow: auto;
 				position: absolute;
 				top: 82px;
 				right: 0px;
 				bottom: 0px;
 				width: 100%;
+			}
+			#editor .editor {
+				font-size: 14px;
+			}
+			#editor form, #editor-files {
+				padding: 15px;
 			}
 
 
@@ -132,74 +126,115 @@
 				<li role="presentation"><a href="#editor-styles" aria-controls="editor-styles" role="tab" data-toggle="tab">Styles</a></li>
 				<li role="presentation"><a href="#editor-script" aria-controls="editor-script" role="tab" data-toggle="tab">Script</a></li>
 				<li role="presentation"><a href="#editor-template" aria-controls="editor-template" role="tab" data-toggle="tab">Template</a></li>
-				<li class="btn-nav-embed">
+				<li class="pull-right">
 					<button class="btn btn-default">Close</button>
 					<button class="btn btn-info">Publish</button>
 					<button class="btn btn-primary">Save</button>
 				</li>
 			</ul>
+
+			<div class="btn-group pull-right" role="group">
+				<button type="button" class="btn btn-default btn-help" title="Help"><span class="fa fa-info-circle"></span></button>
+				<button type="button" class="btn btn-default btn-detachpreview" title="Detach/Atach preview in a new window"><span class="fa fa-window-restore"></span></button>
+				<button type="button" class="btn btn-default btn-maximize" title="Maximize editor and hide preview"><span class="fa fa-window-maximize"></span></button>
+				<button type="button" class="btn btn-default btn-fullscreen"><span class="fa fa-expand"></span></button>
+			</div>
+
 			<div class="tab-content">
 				<!-- Panel Editor Properties -->
 				<div role="tabpanel" class="tab-pane active" id="editor-page">
-
-					<form class="form-horizontal">
-						<div class="form-group">
-							<label for="properties-title" class="col-sm-2 control-label">Title</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" id="properties-title" placeholder="Page title">
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="properties-keywords" class="col-sm-2 control-label">Keywords</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" id="properties-keywords" placeholder="Keywords">
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="properties-description" class="col-sm-2 control-label">Description</label>
-							<div class="col-sm-10">
-								<textarea class="form-control" id="properties-description" rows="4" placeholder="Description"></textarea>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-sm-offset-2 col-sm-10">
-								Changes are immediatily published when you save.
-							</div>
-						</div>
-						<hr>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">Download</label>
-							<div class="col-sm-10">
-								<button class="btn btn-default">HTML</button>
-								<button class="btn btn-default">Markdown</button>
-								<button class="btn btn-default">Whole page as ZIP</button>
-							</div>
+					<div class="btn-group" role="group">
+						<div class="btn-group" role="group" title="Link for pages">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="fa fa-history"></span> History <span class="caret">
+							</button>
+							<ul class="dropdown-menu">
+								<li><a href="#">Latest version</a></li>
+								<li class="divider"></li>
+								<li><a href="#">2016-12-12 08:43:24</a></li>
+								<li><a href="#">2016-12-12 08:43:24</a></li>
+								<li><a href="#">2016-12-12 08:43:24</a></li>
+								<li><a href="#">2016-12-12 08:43:24</a></li>
+								<li><a href="#">2016-12-12 08:43:24</a></li>
+								<li><a href="#">2016-12-12 08:43:24</a></li>
+								<li><a href="#">2016-12-12 08:43:24</a></li>
+								<li><a href="#">2016-12-12 08:43:24</a></li>
+								<li><a href="#">2016-12-12 08:43:24</a></li>
+							</ul>
 						</div>
 						
-						<div class="form-group">
-							<label class="col-sm-2 control-label">Read only</label>
-							<div class="col-sm-10">
-								<button class="btn btn-warning" id="properties-readonly">Make this page read-only</button>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label">History</label>
-							<div class="col-sm-4">
-								<ul class="nav">
-									<li><a href="#">2016-12-12 08:43:24</a></li>
-									<li><a href="#">2016-12-12 08:43:24</a></li>
-									<li><a href="#">2016-12-12 08:43:24</a></li>
-									<li><a href="#">2016-12-12 08:43:24</a></li>
-									<li><a href="#">2016-12-12 08:43:24</a></li>
-									<li><a href="#">2016-12-12 08:43:24</a></li>
-									<li><a href="#">2016-12-12 08:43:24</a></li>
-									<li><a href="#">2016-12-12 08:43:24</a></li>
-									<li><a href="#">2016-12-12 08:43:24</a></li>
+						<div class="btn-group" role="group">
+							<div class="btn-group" role="group" title="Link for pages">
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<span class="fa fa-cloud-download"></span> Download <span class="caret">
+								</button>
+								<ul class="dropdown-menu">
+									<li><a href="#">As HTML</a></li>
+									<li><a href="#">As Markdown</a></li>
+									<li><a href="#">Entire page as ZIP</a></li>
 								</ul>
 							</div>
 						</div>
-					</form>
+
+						<div class="btn-group" role="group">
+							<div class="btn-group" role="group" title="Link for pages">
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<span class="fa fa-share"></span> Share <span class="caret">
+								</button>
+								<ul class="dropdown-menu">
+									<li><a href="#"><span class="fa fa-chain-broken"></span> Create private link</a></li>
+									<li class="divider"></li>
+									<li><a href="#"><span class="fa fa-dropbox"></span> Dropbox</a></li>
+									<li><a href="#"><span class="fa fa-google"></span> Google Drive</a></li>
+									<li><a href="#"><span class="fa fa-windows"></span> Microsoft OneDrive</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="editor">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label for="properties-title" class="col-sm-2 control-label">Title</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="properties-title" placeholder="Page title">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="properties-keywords" class="col-sm-2 control-label">Keywords</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="properties-keywords" placeholder="Keywords">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="properties-description" class="col-sm-2 control-label">Description</label>
+								<div class="col-sm-10">
+									<textarea class="form-control" id="properties-description" rows="4" placeholder="Description"></textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-offset-2 col-sm-10">
+									Changes are immediatily published when you save.
+								</div>
+							</div>
+							<hr>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">Download</label>
+								<div class="col-sm-10">
+									<button class="btn btn-default">HTML</button>
+									<button class="btn btn-default">Markdown</button>
+									<button class="btn btn-default">Whole page as ZIP</button>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-2 control-label">Read only</label>
+								<div class="col-sm-10">
+									<button class="btn btn-warning" id="properties-readonly">Make this page read-only</button>
+								</div>
+							</div>
+						</form>
+					</div>
 				</div>
 				
 
@@ -239,12 +274,6 @@
 					<div class="btn-group" role="group">
 						<button type="button" class="btn btn-default" title="Undo"><span class="fa fa-undo"></span></button>
 						<button type="button" class="btn btn-default" title="Redo"><span class="fa fa-repeat"></span></button>
-					</div>
-					<div class="btn-group" role="group" style="float: right">
-						<button type="button" class="btn btn-default btn-help" title="Help"><span class="fa fa-info-circle"></span></button>
-						<button type="button" class="btn btn-default btn-detachpreview" title="Detach/Atach preview in a new window"><span class="fa fa-window-restore"></span></button>
-						<button type="button" class="btn btn-default btn-maximize" title="Maximize editor and hide preview"><span class="fa fa-window-maximize"></span></button>
-						<button type="button" class="btn btn-default btn-fullscreen"><span class="fa fa-expand"></span></button>
 					</div>
 
 					<div id="markdown-editor" class="editor"></div>
@@ -331,12 +360,6 @@
 
 				<!-- Panel Editor Styles -->
 				<div role="tabpanel" class="tab-pane" id="editor-styles">
-					<div class="btn-group" role="group" style="float: right">
-						<button type="button" class="btn btn-default btn-help" title="Help"><span class="fa fa-info-circle"></span></button>
-						<button type="button" class="btn btn-default btn-detachpreview" title="Detach/Atach preview in a new window"><span class="fa fa-window-restore"></span></button>
-						<button type="button" class="btn btn-default btn-maximize" title="Maximize editor and hide preview"><span class="fa fa-window-maximize"></span></button>
-						<button type="button" class="btn btn-default btn-fullscreen"><span class="fa fa-expand"></span></button>
-					</div>
 
 					<div id="css-editor" class="editor"></div>
 					<script type="text/javascript">
@@ -350,13 +373,6 @@
 
 				<!-- Panel Editor Script -->
 				<div role="tabpanel" class="tab-pane" id="editor-script">
-					
-					<div class="btn-group" role="group" style="float: right">
-						<button type="button" class="btn btn-default btn-help" title="Help"><span class="fa fa-info-circle"></span></button>
-						<button type="button" class="btn btn-default btn-detachpreview" title="Detach/Atach preview in a new window"><span class="fa fa-window-restore"></span></button>
-						<button type="button" class="btn btn-default btn-maximize" title="Maximize editor and hide preview"><span class="fa fa-window-maximize"></span></button>
-						<button type="button" class="btn btn-default btn-fullscreen"><span class="fa fa-expand"></span></button>
-					</div>
 
 					<div id="js-editor" class="editor"></div>
 					<script type="text/javascript">
@@ -370,13 +386,6 @@
 
 				<!-- Panel Editor Template -->
 				<div role="tabpanel" class="tab-pane" id="editor-template">
-					
-					<div class="btn-group" role="group" style="float: right">
-						<button type="button" class="btn btn-default btn-help" title="Help"><span class="fa fa-info-circle"></span></button>
-						<button type="button" class="btn btn-default btn-detachpreview" title="Detach/Atach preview in a new window"><span class="fa fa-window-restore"></span></button>
-						<button type="button" class="btn btn-default btn-maximize" title="Maximize editor and hide preview"><span class="fa fa-window-maximize"></span></button>
-						<button type="button" class="btn btn-default btn-fullscreen"><span class="fa fa-expand"></span></button>
-					</div>
 
 					<div id="handlebars-editor" class="editor"></div>
 					<script type="text/javascript">
