@@ -119,7 +119,7 @@
 		<div id="editor">
 
 			<!-- Nav tabs -->
-			<ul class="nav nav-tabs navbar-default" role="tablist">
+			<ul class="nav nav-tabs navbar-default" id="#editor-tabs" role="tablist">
 				<li role="presentation" class="active"><a href="#editor-page" aria-controls="editor-page" role="tab" data-toggle="tab">Page</a></li>
 				<li role="presentation"><a href="#editor-text" aria-controls="editor-text" role="tab" data-toggle="tab">Text</a></li>
 				<li role="presentation"><a href="#editor-files" aria-controls="editor-files" role="tab" data-toggle="tab">Files</a></li>
@@ -134,15 +134,16 @@
 			</ul>
 
 			<div class="btn-group toolbar pull-right" role="group">
-				<button type="button" class="btn btn-default btn-help" title="Help"><span class="fa fa-info-circle"></span></button>
+				<button type="button" class="btn btn-default btn-help" title="Help" data-toggle="modal" data-target="#editor .tab-content .active .help"><span class="fa fa-info-circle"></span></button>
 				<button type="button" class="btn btn-default btn-detachpreview" title="Detach/Atach preview in a new window"><span class="fa fa-window-restore"></span></button>
 				<button type="button" class="btn btn-default btn-maximize" title="Maximize editor and hide preview"><span class="fa fa-window-maximize"></span></button>
 				<button type="button" class="btn btn-default btn-fullscreen"><span class="fa fa-expand"></span></button>
 			</div>
 
 			<div class="tab-content">
-				<!-- Panel Editor Properties -->
+				<!-- Panel Editor Page -->
 				<div role="tabpanel" class="tab-pane active" id="editor-page">
+					<!-- Panel Editor Page Toolbar -->
 					<div class="btn-group toolbar" role="group">
 						<div class="btn-group" role="group" title="History">
 							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -192,6 +193,8 @@
 						</div>
 					</div>
 					
+					<!-- /Panel Editor Page Toolbar -->
+					
 					<div class="editor">
 						<form class="form-horizontal">
 							<div class="form-group">
@@ -235,11 +238,32 @@
 							</div>
 						</form>
 					</div>
+
+					<!-- Panel Editor Page Help -->
+					<div class="modal fade help" id="myModal" tabindex="-1" role="dialog">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title" id="myModalLabel">Help: Page properties</h4>
+								</div>
+								<div class="modal-body">
+									...
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /Panel Editor Page Help -->
+
 				</div>
 				
 
-				<!-- Panel Editor Page -->
+				<!-- Panel Editor Text -->
 				<div role="tabpanel" class="tab-pane" id="editor-text">
+					<!-- Panel Editor Text Toolbar -->
 					<div class="btn-group toolbar" role="group">
 						<button type="button" class="btn btn-default" title="Bold"><span class="fa fa-bold"></span></button>
 						<button type="button" class="btn btn-default" title="Italic"><span class="fa fa-italic"></span></button>
@@ -275,6 +299,7 @@
 						<button type="button" class="btn btn-default" title="Undo"><span class="fa fa-undo"></span></button>
 						<button type="button" class="btn btn-default" title="Redo"><span class="fa fa-repeat"></span></button>
 					</div>
+					<!-- /Panel Editor Text Toolbar -->
 
 					<div id="markdown-editor" class="editor-ace"></div>
 					<script type="text/javascript">
@@ -284,18 +309,39 @@
 						markdownEditor.setShowPrintMargin(false);
 					</script>
 
+					<!-- Panel Editor Text Help -->
+					<div class="modal fade help" id="myModal" tabindex="-1" role="dialog">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title" id="myModalLabel">Help: Text editor</h4>
+								</div>
+								<div class="modal-body">
+									...
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /Panel Editor Page Help -->
+
 				</div>
 
 
 				<!-- Panel Files -->
 				<div role="tabpanel" class="tab-pane" id="editor-files">
 
+					<!-- Panel Files Toolbar -->
 					<div class="btn-group toolbar" role="group">
 						<!-- The fileinput-button span is used to style the file input field as button -->
 						<button class="btn btn-default" id="editor-files-add"><span class="fa fa-plus"></span> Add files...</button>
 						<button class="btn btn-default" id="editor-files-start"><span class="fa fa-upload"></span> Upload</button>
 						<button class="btn btn-default" id="editor-files-cancel"><span class="fa fa-ban"></span> Cancel all</button>
 					</div>
+					<!-- /Panel Files Toolbar -->
 
 					<!-- The global file processing state -->
 					<div class="fileupload-process">
@@ -340,8 +386,25 @@
 						<!-- List of uploaded files -->
 						<hr><p>There are no uploaded files</p>
 					</div>
-
 					
+					<!-- Panel Files Help -->
+					<div class="modal fade help" id="myModal" tabindex="-1" role="dialog">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title" id="myModalLabel">Help: Files manager</h4>
+								</div>
+								<div class="modal-body">
+									...
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /Panel Files Help -->
 			
 				</div>
 
@@ -356,6 +419,27 @@
 						cssEditor.getSession().setMode("ace/mode/css");
 						cssEditor.setShowPrintMargin(false);
 					</script>
+
+										
+					<!-- Panel Editor Styles Help -->
+					<div class="modal fade help" id="myModal" tabindex="-1" role="dialog">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title" id="myModalLabel">Help: Styles editor</h4>
+								</div>
+								<div class="modal-body">
+									...
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /Panel Editor Styles Help -->
+
 				</div>
 
 
@@ -369,6 +453,26 @@
 						jsEditor.getSession().setMode("ace/mode/javascript");
 						jsEditor.setShowPrintMargin(false);
 					</script>
+
+					<!-- Panel Editor Script Help -->
+					<div class="modal fade help" id="myModal" tabindex="-1" role="dialog">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title" id="myModalLabel">Help: Script editor</h4>
+								</div>
+								<div class="modal-body">
+									...
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /Panel Editor Script Help -->
+					
 				</div>
 
 
@@ -382,6 +486,26 @@
 						jsEditor.getSession().setMode("ace/mode/handlebars");
 						jsEditor.setShowPrintMargin(false);
 					</script>
+
+					<!-- Panel Editor Template Help -->
+					<div class="modal fade help" id="myModal" tabindex="-1" role="dialog">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title" id="myModalLabel">Help: Template editor</h4>
+								</div>
+								<div class="modal-body">
+									...
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /Panel Editor Template Help -->
+
 				</div>
 
 			</div>
