@@ -6,14 +6,14 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta charset="UTF-8">
 		
-		<link rel="stylesheet" type="text/css" href="./static/css/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="./static/css/font-awesome.min.css" />
+		<link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="static/css/font-awesome.min.css" />
 		
-		<script src="./static/js/jquery-1.11.1.min.js"></script>
-		<script src="./static/js/bootstrap.min.js"></script>
-		<script src="./static/js/dropzone.js"></script>
+		<script src="static/js/jquery-1.11.1.min.js"></script>
+		<script src="static/js/bootstrap.min.js"></script>
+		<script src="static/js/dropzone.js"></script>
 
-		<script src="./static/js/ace-editor/ace.js" type="text/javascript" charset="utf-8"></script>
+		<script src="static/js/ace-editor/ace.js" type="text/javascript" charset="utf-8"></script>
 
 		<style type="text/css">
 			.preview-wrapper, #editor {
@@ -55,7 +55,7 @@
 				bottom: 0px;
 				width: 100%;
 			}
-			#editor .editor {
+			#editor-page .editor {
 				padding: 15px;
 			}
 			#editor .editor-ace {
@@ -385,6 +385,41 @@
 						
 						<!-- List of uploaded files -->
 						<hr><p>There are no uploaded files</p>
+
+						<div class="table table-striped files" id="fileupload-template">
+							<div class="file-row">
+								<div class="media">
+									<div class="media-body" style="width: 100%">
+
+										<div class="btn-group pull-right">
+											<button data-dz-size class="btn btn-default btn-sm" disabled></button>
+											<button class="btn btn-primary btn-sm start" title="Start"><span class="fa fa-upload"></span></button>
+											<button data-dz-remove class="btn btn-warning btn-sm cancel" title="Cancel"><span class="fa fa-ban"></span></button>
+											<button data-dz-remove class="btn btn-danger btn-sm delete" title="Delete"><span class="fa fa-trash"></span></button>
+										</div>
+										<p class="media-heading name" data-dz-name></p>
+										
+										
+										<div class="progress progress-striped active" style="height: 30px; clear: both" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+											<div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
+										</div>
+											
+										<strong class="error text-danger" data-dz-errormessage></strong>
+									</div>
+									<div class="media-right">
+										<img class="media-object" data-dz-thumbnail />
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+						<table class="table table-hover">
+							<tr><td>1</td></tr>
+							<tr><td>2</td></tr>
+							<tr><td>3</td></tr>
+							<tr><td>4</td></tr>
+						</table>
 					</div>
 					
 					<!-- Panel Files Help -->
