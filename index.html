@@ -62,36 +62,34 @@
 				font-size: 14px;
 			}
 
-			.list-files {
+			.list-files li {
 				border-bottom: 1px solid #e7e7e7;
-				padding: 8px 15px 8px 15px;
 			}
-			.list-files .name {
-				font-weight: bold;
+			.list-files li .title {
+				display: block;
 			}
-			.list-files small {
+			.list-files li small {
 				color: #777;
 				margin-right: 15px;
 			}
-			.list-files:nth-child(odd) {
-      			background: #f9f9f9;
+			.list-files li:nth-of-type(odd) {
+      			background: #f8f8f8;
 		    }
-			.list-files:hover {
-      			background: #eee;
-		    }
-			.list-files .progress {
- 				position: relative;
-				left: -15px;
-				right: -15px;
-				bottom: -8px;
-				height: 3px;
+			.list-files li .progress {
+				position: absolute;
+				left: 0px;
+				height: 4px;
 				width: 100%;
-				margin-bottom: 0px;
+				bottom: 0px;
+				margin: 0;
+
 				background: none;
 				border-radius: 0px;
-				-webkit-box-shadow: none;
 				box-shadow: none;
 			}
+
+
+
 
 
 
@@ -367,7 +365,7 @@
 						<!-- The fileinput-button span is used to style the file input field as button -->
 						<button class="btn btn-default" id="editor-files-add"><span class="fa fa-plus"></span> Add files...</button>
 						<button class="btn btn-default" id="editor-files-start"><span class="fa fa-upload"></span> Upload</button>
-						<button class="btn btn-default" id="editor-files-cancel"><span class="fa fa-ban"></span> Cancel all</button>
+						<button class="btn btn-default" id="editor-files-cancel"><span class="fa fa-ban"></span> Cancel uploads</button>
 					</div>
 					<!-- /Panel Files Toolbar -->
 
@@ -382,100 +380,49 @@
 
 
 						<!-- This is used as the file preview template -->
-						<!--<div class="table table-striped files" id="fileupload-template">
-							<div class="file-row">
-								<div class="media">
-									<div class="media-body" style="width: 100%">
-
-										<div class="btn-group pull-right">
-											<button data-dz-size class="btn btn-default btn-sm" disabled></button>
-											<button class="btn btn-primary btn-sm start" title="Start"><span class="fa fa-upload"></span></button>
-											<button data-dz-remove class="btn btn-warning btn-sm cancel" title="Cancel"><span class="fa fa-ban"></span></button>
-											<button data-dz-remove class="btn btn-danger btn-sm delete" title="Delete"><span class="fa fa-trash"></span></button>
-										</div>
-										<p class="media-heading name" data-dz-name></p>
-										
-										
-										<div class="progress progress-striped active" style="height: 30px; clear: both" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-											<div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
-										</div>
-											
-										<strong class="error text-danger" data-dz-errormessage></strong>
+						<ul class="nav list-files" id="fileupload-template">
+							<li>
+								<a href="#">
+									<div class="btn-group pull-right">
+										<button class="btn btn-default btn-sm start" title="Upload"><span class="fa fa-upload"></span></button>
+										<button data-dz-remove class="btn btn-default btn-sm delete" title="Delete"><span class="fa fa-trash"></span></button>
 									</div>
-									<div class="media-right">
+									<strong class="title" data-dz-name></strong>
+									<small><i class="fa fa-hdd-o"></i> <span data-dz-size></span></small>
+									<span class="error text-danger" data-dz-errormessage></span>
+
+									<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+										<div class="progress-bar progress-bar-default" style="width: 0%;" data-dz-uploadprogress></div>
+									</div>
+
+									<!--<div class="media-right">
 										<img class="media-object" data-dz-thumbnail />
+									</div>-->
+								</a>
+							</li>
+						
+						</ul>
+						<ul class="nav list-files">
+							<!-- List of uploaded files -->
+							<li>
+								<a href="#">
+									<div class="btn-group pull-right">
+										<button class="btn btn-default btn-sm" title="Insert link inside text"><span class="fa fa-reply"></span></button>
+										<button class="btn btn-default btn-sm" title="Link for this file"><span class="fa fa-link"></span></button>
+										<button class="btn btn-default btn-sm start" title="Download"><span class="fa fa-download"></span></button>
+										<button data-dz-remove class="btn btn-default btn-sm delete" title="Delete"><span class="fa fa-trash"></span></button>
 									</div>
-								</div>
-							</div>
-						</div>-->
-						
-						<!-- List of uploaded files -->
-						<div class="list-files">
-							<div class="btn-group pull-right">
-								<button class="btn btn-default btn-sm start" title="Upload"><span class="fa fa-upload"></span></button>
-								<button data-dz-remove class="btn btn-default btn-sm delete" title="Delete"><span class="fa fa-trash"></span></button>
-							</div>
-							<p class="media-heading name" data-dz-name>This is a name</p>
-							<small data-dz-size><i class="fa fa-hdd-o"></i> 25MB</small>
-							<small data-dz-date><i class="fa fa-calendar"></i> 2016/12/22 16:42</small>
-							<strong class="error text-danger" data-dz-errormessage>ERROR!</strong>
+									<strong class="title" data-dz-name>Example Title</strong>
+									<small><i class="fa fa-hdd-o"></i> <span data-dz-size>25MB</span></small>
+									<small><i class="fa fa-calendar"></i> <span data-dz-date>2016-12-12 16:16</span></small>
+									<span class="error text-danger" data-dz-errormessage></span>
 
-							<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-								<div class="progress-bar progress-bar-default" style="width: 50%;" data-dz-uploadprogress></div>
-							</div>
-						</div>
-
-
-						<div class="list-files">
-							<div class="btn-group pull-right">
-								<button class="btn btn-default btn-sm start" title="Upload"><span class="fa fa-upload"></span></button>
-								<button data-dz-remove class="btn btn-default btn-sm delete" title="Delete"><span class="fa fa-trash"></span></button>
-							</div>
-							<p class="media-heading name" data-dz-name>This is a name</p>
-							<small data-dz-size><i class="fa fa-hdd-o"></i> 25MB</small>
-							<small data-dz-date><i class="fa fa-calendar"></i> 2016/12/22 16:42</small>
-							<strong class="error text-danger" data-dz-errormessage></strong>
-
-							<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-								<div class="progress-bar progress-bar-default" style="width: 25%;" data-dz-uploadprogress></div>
-							</div>
-						</div>
-						
-						<div class="list-files">
-							<div class="btn-group pull-right">
-								<button class="btn btn-default btn-sm" title="Insert link inside text"><span class="fa fa-reply"></span></button>
-								<button class="btn btn-default btn-sm" title="Link for this file"><span class="fa fa-link"></span></button>
-								<button class="btn btn-default btn-sm start" title="Download"><span class="fa fa-download"></span></button>
-								<button data-dz-remove class="btn btn-default btn-sm delete" title="Delete"><span class="fa fa-trash"></span></button>
-							</div>
-							<p class="media-heading name" data-dz-name>This is a name</p>
-							<small data-dz-size><i class="fa fa-hdd-o"></i> 25MB</small>
-							<small data-dz-date><i class="fa fa-calendar"></i> 2016/12/22 16:42</small>
-							<strong class="error text-danger" data-dz-errormessage></strong>
-
-							<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-								<div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
-							</div>
-						</div>
-
-						<div class="list-files">
-							<div class="btn-group pull-right">
-								<button class="btn btn-default btn-sm" title="Insert link inside text"><span class="fa fa-reply"></span></button>
-								<button class="btn btn-default btn-sm" title="Link for this file"><span class="fa fa-link"></span></button>
-								<button class="btn btn-default btn-sm start" title="Download"><span class="fa fa-download"></span></button>
-								<button data-dz-remove class="btn btn-default btn-sm delete" title="Delete"><span class="fa fa-trash"></span></button>
-							</div>
-							<p class="media-heading name" data-dz-name>This is a name</p>
-							<small data-dz-size><i class="fa fa-hdd-o"></i> 25MB</small>
-							<small data-dz-date><i class="fa fa-calendar"></i> 2016/12/22 16:42</small>
-							<strong class="error text-danger" data-dz-errormessage></strong>
-
-							<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-								<div class="progress-bar progress-bar-success" style="width: 0%;" data-dz-uploadprogress></div>
-							</div>
-						</div>
-
-
+									<!--<div class="media-right">
+										<img class="media-object" data-dz-thumbnail />
+									</div>-->
+								</a>
+							</li>
+						</ul>
 					</div>
 					
 					<!-- Panel Files Help -->
@@ -641,7 +588,7 @@
 			$("#fileupload-template").empty();
 
 			var dropzone = new Dropzone(document.documentElement, {		// Make the whole document a dropzone
-				url: "http://www.example.com/urltosend",	// Set the url
+				url: "http://www.rigon.tk/documentation/testupload",	// Set the url
 				maxFilesize: 52,							// TODO
 				thumbnailWidth: 80,
 				thumbnailHeight: 80,
