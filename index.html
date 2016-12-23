@@ -291,14 +291,14 @@
 				<div role="tabpanel" class="tab-pane" id="editor-text">
 					<!-- Panel Editor Text Toolbar -->
 					<div class="btn-group toolbar" role="group">
-						<button type="button" class="btn btn-default" title="Bold"><span class="fa fa-bold"></span></button>
-						<button type="button" class="btn btn-default" title="Italic"><span class="fa fa-italic"></span></button>
+						<button type="button" class="btn btn-default btn-bold" title="Bold"><span class="fa fa-bold"></span></button>
+						<button type="button" class="btn btn-default btn-italic" title="Italic"><span class="fa fa-italic"></span></button>
 					</div>
 					<div class="btn-group toolbar" role="group">
-						<button type="button" class="btn btn-default" title="Quote text"><span class="fa fa-quote-left"></span></button>
-						<button type="button" class="btn btn-default" title="Block of code"><span class="fa fa-code"></span></button>
-						<button type="button" class="btn btn-default" title="Add image"><span class="fa fa-image"></span></button>
-						<button type="button" class="btn btn-default" title="Hyperlink"><span class="fa fa-link"></span></button>
+						<button type="button" class="btn btn-default btn-quote" title="Quote text"><span class="fa fa-quote-left"></span></button>
+						<button type="button" class="btn btn-default btn-code" title="Block of code"><span class="fa fa-code"></span></button>
+						<button type="button" class="btn btn-default btn-image" title="Add image"><span class="fa fa-image"></span></button>
+						<button type="button" class="btn btn-default btn-hyperlink" title="Hyperlink"><span class="fa fa-link"></span></button>
 						<div class="btn-group" role="group" title="Link for pages">
 							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<span class="fa fa-file-text"></span> <span class="caret">
@@ -316,14 +316,14 @@
 						</div>
 					</div>
 					<div class="btn-group toolbar" role="group">
-						<button type="button" class="btn btn-default" title="Ordered list"><span class="fa fa-list-ol"></span></button>
-						<button type="button" class="btn btn-default" title="Unordered list"><span class="fa fa-list-ul"></span></button>
-						<button type="button" class="btn btn-default" title="Header"><span class="fa fa-header"></span></button>
-						<button type="button" class="btn btn-default" title="Table"><span class="fa fa-table"></span></button>
+						<button type="button" class="btn btn-default btn-ol" title="Ordered list"><span class="fa fa-list-ol"></span></button>
+						<button type="button" class="btn btn-default btn-ul" title="Unordered list"><span class="fa fa-list-ul"></span></button>
+						<button type="button" class="btn btn-default btn-header" title="Header"><span class="fa fa-header"></span></button>
+						<button type="button" class="btn btn-default btn-table" title="Table"><span class="fa fa-table"></span></button>
 					</div>
 					<div class="btn-group toolbar" role="group">
-						<button type="button" class="btn btn-default" title="Undo"><span class="fa fa-undo"></span></button>
-						<button type="button" class="btn btn-default" title="Redo"><span class="fa fa-repeat"></span></button>
+						<button type="button" class="btn btn-default btn-undo" title="Undo"><span class="fa fa-undo"></span></button>
+						<button type="button" class="btn btn-default btn-redo" title="Redo"><span class="fa fa-repeat"></span></button>
 					</div>
 					<!-- /Panel Editor Text Toolbar -->
 
@@ -333,6 +333,28 @@
 						markdownEditor.setTheme("ace/theme/dreamweaver");
 						markdownEditor.getSession().setMode("ace/mode/markdown");
 						markdownEditor.setShowPrintMargin(false);
+						markdownEditor.focus();
+						
+						function textEditorInsert(text) {
+							markdownEditor.insert(text);
+							markdownEditor.focus();
+						}
+						$("#editor-text .btn-bold").click(function() {
+							textEditorInsert("****");
+							markdownEditor.selection.moveCursorLeft();
+							markdownEditor.selection.moveCursorLeft();
+						});
+						$("#editor-text .btn-italic").click(function() {
+							textEditorInsert("**");
+							markdownEditor.selection.moveCursorLeft();
+						});
+						$("#editor-text .btn-quote").click(function() { textEditorInsert("\n\n> "); });
+						$("#editor-text .btn-quote").click(function() { textEditorInsert("\n\n    "); });
+						$("#editor-text .btn-ul").click(function() { textEditorInsert("\n\n - "); });
+						$("#editor-text .btn-ol").click(function() { textEditorInsert("\n\n 1. "); });
+						$("#editor-text .btn-header").click(function() { textEditorInsert("\n\n# "); });
+						$("#editor-text .btn-undo").click(function() { markdownEditor.getSession().getUndoManager().undo(); markdownEditor.focus(); });
+						$("#editor-text .btn-redo").click(function() { markdownEditor.getSession().getUndoManager().redo(); markdownEditor.focus(); });
 					</script>
 
 					<!-- Panel Editor Text Help -->
