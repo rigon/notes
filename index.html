@@ -12,6 +12,7 @@
 		<script src="public/jquery/dist/jquery.min.js"></script>
 		<script src="public/bootstrap/dist/js/bootstrap.min.js"></script>
 		<script src="public/dropzone/dist/dropzone.js"></script>
+		<script src="public/bootpopup/bootpopup.js"></script>
 
 		<script src="public/ace-build/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 
@@ -350,6 +351,18 @@
 						});
 						$("#editor-text .btn-quote").click(function() { textEditorInsert("\n\n> "); });
 						$("#editor-text .btn-code").click(function() { textEditorInsert("\n\n    "); });
+						$("#editor-text .btn-image").click(function() { 
+							bootpopup({
+								title: "Add image",
+								content: [
+									{ p: {text: "Insert image info here:"}},
+									{ text: {label: "Title", name: "title", placeholder: "Description for image"}},
+									{ url: {label: "Link", name: "link", placeholder: "Hyperlink for image"}}],
+								ok: function(data,e) {
+									textEditorInsert("![" + data[0].value + "](" + data[1].value + ")");
+								},
+							});
+						});
 						$("#editor-text .btn-ul").click(function() { textEditorInsert("\n\n - "); });
 						$("#editor-text .btn-ol").click(function() { textEditorInsert("\n\n 1. "); });
 						$("#editor-text .btn-header").click(function() { textEditorInsert("\n\n# "); });
