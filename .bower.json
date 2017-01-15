@@ -24,6 +24,7 @@
     "fontawesome": "^4.7.0",
     "dropzone": "^4.3.0",
     "marked": "^0.3.6",
-    "ace-build": "^1.2.6"
+    "ace-build": "^1.2.6",
+    "string": "^3.3.3"
   }
 }

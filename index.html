@@ -11,9 +11,9 @@
 		
 		<script src="public/jquery/dist/jquery.min.js"></script>
 		<script src="public/bootstrap/dist/js/bootstrap.min.js"></script>
-		<script src="public/dropzone/dist/dropzone.js"></script>
+		<script src="public/dropzone/dist/min/dropzone.min.js"></script>
 		<script src="public/bootpopup/bootpopup.js"></script>
-
+		<script src="public/string/dist/string.min.js"></script>
 		<script src="public/ace-build/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 
 		<style type="text/css">
@@ -305,7 +305,7 @@
 								<span class="fa fa-file-text"></span> <span class="caret">
 							</button>
 							<ul class="dropdown-menu">
-								<li><a href="#">New Page</a></li>
+								<li><a href="#" class="btn-newpage">New Page</a></li>
 								<li class="divider"></li>
 								<li><a href="#">Page 1</a></li>
 								<li><a href="#">Page 2</a></li>
@@ -358,8 +358,39 @@
 									{ p: {text: "Insert image info here:"}},
 									{ text: {label: "Title", name: "title", placeholder: "Description for image"}},
 									{ url: {label: "Link", name: "link", placeholder: "Hyperlink for image"}}],
+								buttons: ["cancel", "ok"],
 								ok: function(data,e) {
 									textEditorInsert("![" + data[0].value + "](" + data[1].value + ")");
+								},
+							});
+						});
+						$("#editor-text .btn-hyperlink").click(function() { 
+							bootpopup({
+								title: "Add hyperlink",
+								content: [
+									{ p: {text: "Insert hyperlink info here:"}},
+									{ text: {label: "Title", name: "title", placeholder: "Description for hyperlink"}},
+									{ url: {label: "URL", name: "url", placeholder: "Hyperlink"}}],
+								buttons: ["cancel", "ok"],
+								ok: function(data,e) {
+									textEditorInsert("[" + data[0].value + "](" + data[1].value + ")");
+								},
+							});
+						});
+						$("#editor-text .btn-newpage").click(function() { 
+							bootpopup({
+								title: "Add new page",
+								content: [
+									{ p: {text: "Insert new page info here:"}},
+									{ text: {label: "Name", name: "Name", placeholder: "Page title", id: "newpage-name", onkeyup: function() {
+										var name = $("#newpage-name").val();
+										var url = S(name).slugify().s;
+										$("#newpage-url").val(url);
+									}}},
+									{ text: {label: "URL", name: "url", placeholder: "URL for page", id: "newpage-url"}}],
+								buttons: ["cancel", "ok"],
+								ok: function(data,e) {
+									textEditorInsert("[" + data[0].value + "](" + data[1].value + ")");
 								},
 							});
 						});
