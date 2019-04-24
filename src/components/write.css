@@ -1,0 +1,10 @@
+.title-input, .title-input:focus, .title-input:active {
+    border: none;
+    border-radius: 0;
+    transition: none;
+    box-shadow: none;
+    outline: none;
+    padding-left: 0;
+    padding-right: 0;
+    padding: 2rem 0;
+}

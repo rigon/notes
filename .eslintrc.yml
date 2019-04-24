@@ -1,0 +1,37 @@
+parser: "babel-eslint"
+env:
+  es6: true
+  node: true
+extends: 'eslint:recommended'
+parserOptions:
+  sourceType: module
+rules:
+  indent:
+    - error
+    - tab
+  camelcase:
+    - error
+    - properties: never
+  linebreak-style:
+    - error
+    - unix
+  no-console:
+    - error
+    - allow:
+      - error
+      - warn
+      - log   # REMOVE ME
+  no-empty:
+    - error
+    - allowEmptyCatch: true
+  no-unused-vars:
+    - error
+    - args: none
+  no-var:
+    - error
+  semi:
+    - error
+    - always
+  quotes:
+    - error
+    - single

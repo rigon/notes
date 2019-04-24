@@ -1,0 +1,34 @@
+{
+  "name": "notes",
+  "version": "2.0.0",
+  "description": "A notebook application to have your notes always on hand. http://www.spmdwe.tk",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint lib/ tests/",
+    "start": "light-server -s .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rigon/notes.git"
+  },
+  "author": "rigon <ricar.goncalves@gmail.com>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/rigon/notes/issues"
+  },
+  "homepage": "https://github.com/rigon/notes#readme",
+  "dependencies": {
+    "bootpopup": "^1.5.1",
+    "bootstrap": "^3",
+    "dropzone": "^5.5.1",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.4.0",
+    "marked": "^0.6.2",
+    "react": "^16.8.6",
+    "string": "^3.3.3"
+  },
+  "devDependencies": {
+    "light-server": "^2.6.2"
+  }
+}

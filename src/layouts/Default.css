@@ -1,0 +1,8 @@
+.flex {
+    display: flex;
+    flex-direction: row;
+}
+.gutter.gutter-horizontal {
+    cursor: ew-resize;
+    background-color: lightgray;
+}
