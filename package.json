@@ -13,7 +13,7 @@
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "lint": "eslint lib/ tests/",
+    "lint": "eslint src/",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -38,6 +38,7 @@
     "react-split": "^2.0.4"
   },
   "devDependencies": {
+    "eslint": "^5.16.0",
     "source-map-explorer": "^1.8.0"
   },
   "browserslist": [
