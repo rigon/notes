@@ -1,119 +1,165 @@
 import React from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import { Divider, Drawer } from '@material-ui/core';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import PeopleIcon from '@material-ui/icons/People';
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import TextFieldsIcon from '@material-ui/icons/TextFields';
-import ImageIcon from '@material-ui/icons/Image';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import SettingsIcon from '@material-ui/icons/Settings';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+
+import {
+  Drawer,
+  AppBar,
+  Toolbar,
+  List,
+  CssBaseline,
+  Typography,
+  Divider,
+  IconButton,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from '@material-ui/core';
+
+import {
+  Dashboard as DashboardIcon,
+  AccountCircle as ProfileIcon,
+
+  Menu as MenuIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+
+  TextFields as WriteIcon,
+  Attachment as FilesIcon,
+  Style as StylesIcon,
+  Code as ScriptIcon,
+  Palette as ThemesIcon
+} from '@material-ui/icons';
 
 import { Profile, SidebarNav, UpgradePlan } from './components';
 
+const drawerWidth = 200;
+
 const useStyles = makeStyles(theme => ({
-  drawer: {
-    width: 240,
-    [theme.breakpoints.up('lg')]: {
-      marginTop: 64,
-      height: 'calc(100% - 64px)'
-    }
-  },
   root: {
-    backgroundColor: theme.palette.white,
     display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-    padding: theme.spacing(2)
   },
-  divider: {
-    margin: theme.spacing(2, 0)
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
-  nav: {
-    marginBottom: theme.spacing(2)
-  }
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+  },
+  drawerOpen: {
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerClose: {
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: 'hidden',
+    width: theme.spacing(7) + 1,
+    [theme.breakpoints.up('sm')]: {
+      width: theme.spacing(9) + 1,
+    },
+  },
+  toolbar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(0, 1),
+    ...theme.mixins.toolbar,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
 }));
 
-const Sidebar = props => {
-  const { open, variant, onClose, className, ...rest } = props;
-
+export default function MiniDrawer() {
   const classes = useStyles();
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
 
-  const pages = [
-    {
-      title: 'Dashboard',
-      href: '/dashboard',
-      icon: <DashboardIcon />
-    },
-    {
-      title: 'Users',
-      href: '/users',
-      icon: <PeopleIcon />
-    },
-    {
-      title: 'Products',
-      href: '/products',
-      icon: <ShoppingBasketIcon />
-    },
-    {
-      title: 'Authentication',
-      href: '/sign-in',
-      icon: <LockOpenIcon />
-    },
-    {
-      title: 'Typography',
-      href: '/typography',
-      icon: <TextFieldsIcon />
-    },
-    {
-      title: 'Icons',
-      href: '/icons',
-      icon: <ImageIcon />
-    },
-    {
-      title: 'Account',
-      href: '/account',
-      icon: <AccountBoxIcon />
-    },
-    {
-      title: 'Settings',
-      href: '/settings',
-      icon: <SettingsIcon />
-    }
-  ];
+  const chevronDirection = open ^ (theme.direction === 'rtl');
+
+  const handleDrawerToggle = () => {
+    setOpen(!open);
+  }
 
   return (
-    <Drawer
-      anchor="left"
-      classes={{ paper: classes.drawer }}
-      onClose={onClose}
-      open={open}
-      variant={variant}
-    >
-      <div
-        {...rest}
-        className={clsx(classes.root, className)}
+    <div className={classes.root}>
+      <Drawer
+        variant="permanent"
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: open,
+          [classes.drawerClose]: !open,
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          }),
+        }}
+        open={open}
       >
+
+        <List>
+          <ListItem button key="dashboard" onClick={handleDrawerToggle} aria-label="toggle drawer">
+            <ListItemIcon><MenuIcon /></ListItemIcon>
+            <ListItemText primary="" />
+          </ListItem>
+        </List>
+
         <Profile />
-        <Divider className={classes.divider} />
-        <SidebarNav
-          className={classes.nav}
-          pages={pages}
-        />
-        <UpgradePlan />
-      </div>
-    </Drawer>
+        <List>
+          <ListItem button key="dashboard">
+            <ListItemIcon><DashboardIcon /></ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItem>
+          <ListItem button key="profile">
+            <ListItemIcon><ProfileIcon /></ListItemIcon>
+            <ListItemText primary="Profile" />
+          </ListItem>
+        </List>
+        <Divider />
+
+        <List>
+          <ListItem button key="write">
+            <ListItemIcon><WriteIcon /></ListItemIcon>
+            <ListItemText primary="Write" />
+          </ListItem>
+          <ListItem button key="files">
+            <ListItemIcon><FilesIcon /></ListItemIcon>
+            <ListItemText primary="Files" />
+          </ListItem>
+          <ListItem button key="styles">
+            <ListItemIcon><StylesIcon /></ListItemIcon>
+            <ListItemText primary="Styles" />
+          </ListItem>
+          <ListItem button key="script">
+            <ListItemIcon><ScriptIcon /></ListItemIcon>
+            <ListItemText primary="Scripts" />
+          </ListItem>
+          <ListItem button key="themes">
+            <ListItemIcon><ThemesIcon /></ListItemIcon>
+            <ListItemText primary="Themes" />
+          </ListItem>
+        </List>
+        <Divider />
+
+        <div className={classes.toolbar}>
+          <IconButton onClick={handleDrawerToggle}>
+            { chevronDirection ? <ChevronLeftIcon /> : <ChevronRightIcon /> }
+          </IconButton>
+        </div>
+      </Drawer>
+    </div>
   );
-};
-
-Sidebar.propTypes = {
-  className: PropTypes.string,
-  onClose: PropTypes.func,
-  open: PropTypes.bool.isRequired,
-  variant: PropTypes.string.isRequired
-};
-
-export default Sidebar;
+}
