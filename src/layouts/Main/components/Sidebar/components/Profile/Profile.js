@@ -33,7 +33,7 @@ const Profile = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <Avatar sixe
+      <Avatar
         alt="Person"
         className={classes.avatar}
         component={RouterLink}

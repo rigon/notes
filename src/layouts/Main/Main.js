@@ -46,9 +46,17 @@ const Main = props => {
     setOpenSidebar(false);
   };
 
+  const showPreviewOverlay = () => {
+    document.getElementById('overlay').style.display = 'block';
+  }
+  const hidePreviewOverlay = () => {
+    document.getElementById('overlay').style.display = 'none';
+  }
+
   const shouldOpenSidebar = isDesktop ? true : openSidebar;
 
   return (
+
     <div
       className={clsx({
         [classes.root]: true,
@@ -61,9 +69,13 @@ const Main = props => {
         open={shouldOpenSidebar}
         variant={isDesktop ? 'persistent' : 'temporary'}
       />
-      <SplitPane split="vertical" initialSize="50%" minSize="10%">
+      <SplitPane split="vertical" initialSize={50} minSize={500}
+        onDragStarted={showPreviewOverlay} onDragFinished={hidePreviewOverlay}>
         <Editor />
-        <Preview />
+        <div style={{ height: "100%", width: "100%" }}>
+          <div id='overlay' style={{ height: "100%", width: "100%", position: "absolute", display: "none" }}></div>
+          <Preview />
+        </div>
       </SplitPane>
     </div>
   );
