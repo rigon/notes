@@ -69,15 +69,18 @@ const Main = props => {
         open={shouldOpenSidebar}
         variant={isDesktop ? 'persistent' : 'temporary'}
       />
-      <SplitPane split="vertical" initialSize={50} minSize={500}
-        onDragStarted={showPreviewOverlay} onDragFinished={hidePreviewOverlay}>
-        <Editor />
-        <div style={{ height: "100%", width: "100%" }}>
-          <div id='overlay' style={{ height: "100%", width: "100%", position: "absolute", display: "none" }}></div>
-          <Preview />
-        </div>
-      </SplitPane>
-    </div>
+        <SplitPane
+          split="vertical"
+          minSize={500}
+          onDragStarted={showPreviewOverlay}
+          onDragFinished={hidePreviewOverlay}>
+            <Editor />
+            <div style={{ height: "100%", width: "100%" }}>
+              <div id='overlay' style={{ height: "100%", width: "100%", position: "absolute", display: "none" }}></div>
+              <Preview />
+            </div>
+        </SplitPane>
+      </div>
   );
 };
 
