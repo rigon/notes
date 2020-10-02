@@ -1,1 +1,1 @@
-../../spmdwe-markdown_styles.md
+../../MARKDOWN-STYLES.md

@@ -1,1 +1,1 @@
-../../spmdwe-readme.md
+../../README.md

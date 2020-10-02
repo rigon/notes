@@ -1,1 +1,1 @@
-../../spmdwe-examples.md
+../../EXAMPLES.md
