@@ -9,8 +9,8 @@
 # Source: http://people.w3.org/~dom/archives/2004/07/testing-php-pages-with-query_string/
 
 # Configuration
-$file_name = "home";		# file by default
-$file_mode = "view";		# "view" (implied default); "edit", "save", "save_edit", "upload", "template_save", "publish"
+$file_name = get_env("HOMEPAGE","home");	# file by default
+$file_mode = "view";						# "view" (implied default); "edit", "save", "save_edit", "upload", "template_save", "publish"
 
 define_env('SITE_NAME', 'Spmdwe Editor');	# Website name
 define_env('SAVE_ENABLED', true);			# set to false to disable saving ("demo mode")
@@ -28,6 +28,9 @@ define('DEFAULT_TEXT', "# Creating a new file\n\nThis file does not exist. You c
 
 # Application
 
+function get_env($name, $default) {
+	return isset($_ENV[$name]) ? $_ENV[$name] : $default;
+}
 function define_env($name, $default) {
 	$value = isset($_ENV[$name]) ? $_ENV[$name] : $default;
 	define($name, $value);
