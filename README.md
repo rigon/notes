@@ -64,6 +64,7 @@ To save the data, you can run with a volume:
 You can set environment variables to customize your installation:
 
  - `SITE_NAME`: Name of the Website
+ - `HOMEPAGE`: Default page loaded for homepage
  - `SAVE_ENABLED`: Allow modifications
  - `REQUIRE_AUTH`: Require authentication to make modifications
  - `USER`: Username used for authentication
