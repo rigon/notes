@@ -2,7 +2,8 @@
 /**
 GLOBAL VARIABLES
 ================
-$base_file_name     - name of the file, all revision files have the same base filename
+SITE_NAME			- name of the website
+$base_file_name		- name of the file, all revision files have the same base filename
 $file_name			- filename of the current file
 $file_revisions		- list of revisions to the file
 $file_readonly		- flag indicating if the file is read only
@@ -19,7 +20,7 @@ $html				- HTML of the published version of the file
 ?><!DOCTYPE html>
 <html>
 	<head>
-		<title><?php echo $file_name; ?> - Spmdwe Editor</title>
+		<title><?php echo $file_name; ?> - <?php echo SITE_NAME; ?></title>
 		
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		
@@ -154,7 +155,7 @@ $html				- HTML of the published version of the file
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="<?php echo $baseurl; ?>"><?php //echo $file_name; ?>Spmdwe</a>
+					<a class="navbar-brand" href="<?php echo $baseurl; ?>"><?php echo SITE_NAME; ?></a>
 				</div>
 				
 				<!-- Navbar -->

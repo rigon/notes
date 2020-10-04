@@ -61,6 +61,14 @@ To save the data, you can run with a volume:
 
     docker run -p 80:80 -v spmdwe_data:/var/www/html/files -d rigon/spmdwe
 
+You can set environment variables to customize your installation:
+
+ - `SITE_NAME`: Name of the Website
+ - `SAVE_ENABLED`: Allow modifications
+ - `REQUIRE_AUTH`: Require authentication to make modifications
+ - `USER`: Username used for authentication
+ - `PASS`: Password for the user
+
 
 Download
 ---

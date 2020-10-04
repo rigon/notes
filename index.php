@@ -12,20 +12,26 @@
 $file_name = "home";		# file by default
 $file_mode = "view";		# "view" (implied default); "edit", "save", "save_edit", "upload", "template_save", "publish"
 
-define('SAVE_ENABLED', true);			# set to false to disable saving ("demo mode")
-define('REQUIRE_AUTH', false);			# require authentication for editing
-define('AUTH_FILE', 'htpasswd');		# file containing credentials for authentication, htpasswd compatible
-define('REVISION_MARKER', '_rev');		# marker indicating if it is a revision file
-define('FILES_PATH', 'files/%s/');		# path where the files are stored. Use %s to be replaced with the filename
-define('CSS_START', '<style>');			# start of a CSS section
-define('CSS_END', '</style>');			# end of a CSS section
-define('TEMPLATE_EDIT', 'template.php');					# template used for editing
+define_env('SITE_NAME', 'Spmdwe Editor');	# Website name
+define_env('SAVE_ENABLED', true);			# set to false to disable saving ("demo mode")
+define_env('REQUIRE_AUTH', false);			# require authentication for editing
+
+define('AUTH_FILE', 'htpasswd');			# file containing credentials for authentication, htpasswd compatible
+define('REVISION_MARKER', '_rev');			# marker indicating if it is a revision file
+define('FILES_PATH', 'files/%s/');			# path where the files are stored. Use %s to be replaced with the filename
+define('CSS_START', '<style>');				# start of a CSS section
+define('CSS_END', '</style>');				# end of a CSS section
+define('TEMPLATE_EDIT', 'template.php');	# template used for editing
 define('TEMPLATE_PUBLISH', 'files/publish_template.php');	# template used for publishing
 define('DEFAULT_TEXT', "# Creating a new file\n\nThis file does not exist. You can place your own text here.\n\n**HAVE FUN!**");
 
 
 # Application
 
+function define_env($name, $default) {
+	$value = isset($_ENV[$name]) ? $_ENV[$name] : $default;
+	define($name, $value);
+}
 
 # Ensure if the enviroment is correct
 if(empty($_GET))
@@ -62,13 +68,28 @@ $user = "";
 $authenticated = !REQUIRE_AUTH;		// Automatically authenticated if authentication is not required
 if(REQUIRE_AUTH) {
 	session_start();
-
-	## Check authentication
-	if(isset($_SERVER['PHP_AUTH_USER']) and isset($_SERVER['PHP_AUTH_PW']) and file_exists(AUTH_FILE)) {
+	
+	## Check if authentication is provided
+	if(!isset($_SERVER['PHP_AUTH_USER']) or !isset($_SERVER['PHP_AUTH_PW'])) {
+		$authenticated = false;
+		$message .= 'Authentication failed!\nProceeding in published mode...\n';
+	}
+	## Check user credentials using environment variables
+	elseif(isset($_ENV['USER']) and isset($_ENV['PASS'])) {
+		$user = $_SERVER['PHP_AUTH_USER'];
+		$pass = $_SERVER['PHP_AUTH_PW'];
+		if($user == $_ENV['USER'] and $pass == $_ENV['PASS'])
+			$authenticated = true;
+		else {
+			$authenticated = false;
+			$message .= 'Authentication failed!\nProceeding in published mode...\n';
+		}
+	}
+	## Check user credentials using htpasswd
+	elseif(file_exists(AUTH_FILE)) {
 		$user = escapeshellarg($_SERVER['PHP_AUTH_USER']);
 		$pass = escapeshellarg($_SERVER['PHP_AUTH_PW']);
 		
-		// Check user credentials
 		exec("htpasswd -vb ".AUTH_FILE." $user $pass 2>&1", $output, $returnval);
 		$message .= implode('\n', $output).'\n';
 		
@@ -83,11 +104,14 @@ if(REQUIRE_AUTH) {
 			$authenticated = false;
 			$message .= 'Authentication failed!\nProceeding in published mode...\n';
 		}
-		
-		// Cleanup
-		$user = $_SERVER['PHP_AUTH_USER'];
-		unset($pass);
 	}
+	## Not authenticated
+	else
+		$authenticated = false;
+	
+	// Cleanup
+	$user = $_SERVER['PHP_AUTH_USER'];
+	unset($pass);
 	
 	## Login
 	if((isset($_GET['login']) and !$authenticated)) {
@@ -324,9 +348,6 @@ function max_upload() {
 	return $upload_mb;
 }
 
-	
-
-
 // for unicode output: (http://stackoverflow.com/questions/713293)
 header('Content-Type: text/html; charset=utf-8');
 // to disable caching and force a reload each time page is read:
@@ -336,11 +357,9 @@ header('Content-Type: text/html; charset=utf-8');
 //header('Cache-Control: post-check=0, pre-check=0', FALSE);
 //header('Pragma: no-cache');
 
-
 # Get template file
 $template_file = htmlspecialchars(file_get_contents(
 		file_exists(TEMPLATE_PUBLISH) ? TEMPLATE_PUBLISH : TEMPLATE_EDIT));
-		
 
 # Preview with the template provided
 if(isset($_REQUEST['preview']) and isset($_REQUEST['template']))
