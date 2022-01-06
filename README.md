@@ -70,6 +70,9 @@ You can set environment variables to customize your installation:
  - `USER`: Username used for authentication
  - `PASS`: Password for the user
 
+For a multi-arch build, it can be done with:
+
+    docker buildx build --push -t rigon/spmdwe --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le .
 
 Download
 ---

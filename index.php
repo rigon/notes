@@ -10,7 +10,7 @@
 
 # Configuration
 $file_name = get_env("HOMEPAGE","home");	# file by default
-$file_mode = "view";						# "view" (implied default); "edit", "save", "save_edit", "upload", "template_save", "publish"
+$file_mode = "view";						# "view" (default), "edit", "save", "save_edit", "upload", "template_save", "publish", "published"
 
 define_env('SITE_NAME', 'Spmdwe Editor');	# Website name
 define_env('SAVE_ENABLED', true);			# set to false to disable saving ("demo mode")
@@ -73,48 +73,42 @@ if(REQUIRE_AUTH) {
 	session_start();
 	
 	## Check if authentication is provided
-	if(!isset($_SERVER['PHP_AUTH_USER']) or !isset($_SERVER['PHP_AUTH_PW'])) {
-		$authenticated = false;
-		$message .= 'Authentication failed!\nProceeding in published mode...\n';
-	}
-	## Check user credentials using environment variables
-	elseif(isset($_ENV['USER']) and isset($_ENV['PASS'])) {
+	if(isset($_SERVER['PHP_AUTH_USER']) and isset($_SERVER['PHP_AUTH_PW'])) {
+
+		## Check user credentials using environment variables (overrides htpasswd)
+		if(isset($_ENV['USER']) and isset($_ENV['PASS'])) {
+			$user = $_SERVER['PHP_AUTH_USER'];
+			$pass = $_SERVER['PHP_AUTH_PW'];
+			if($user == $_ENV['USER'] and $pass == $_ENV['PASS'])
+				$authenticated = true;
+		}
+
+		## Check user credentials using htpasswd
+		elseif(file_exists(AUTH_FILE)) {
+			$user = escapeshellarg($_SERVER['PHP_AUTH_USER']);
+			$pass = escapeshellarg($_SERVER['PHP_AUTH_PW']);
+			
+			exec("htpasswd -vb ".AUTH_FILE." $user $pass 2>&1", $output, $returnval);
+			$message .= implode('\n', $output).'\n';
+			
+			// Start session if valid
+			if($returnval == 0 and isset($_GET['login']))
+				$_SESSION['session_started'] = true;
+			
+			// Authenticate user if valid
+			if($returnval == 0 and isset($_SESSION['session_started']) and $_SESSION['session_started'] == true)
+				$authenticated = true;
+		}
+
+		// Cleanup
 		$user = $_SERVER['PHP_AUTH_USER'];
-		$pass = $_SERVER['PHP_AUTH_PW'];
-		if($user == $_ENV['USER'] and $pass == $_ENV['PASS'])
-			$authenticated = true;
-		else {
-			$authenticated = false;
-			$message .= 'Authentication failed!\nProceeding in published mode...\n';
-		}
+		unset($pass);
 	}
-	## Check user credentials using htpasswd
-	elseif(file_exists(AUTH_FILE)) {
-		$user = escapeshellarg($_SERVER['PHP_AUTH_USER']);
-		$pass = escapeshellarg($_SERVER['PHP_AUTH_PW']);
-		
-		exec("htpasswd -vb ".AUTH_FILE." $user $pass 2>&1", $output, $returnval);
-		$message .= implode('\n', $output).'\n';
-		
-		// Start session if valid
-		if($returnval == 0 and isset($_GET['login']))
-			$_SESSION['session_started'] = true;
-		
-		// Authenticate user if valid
-		if($returnval == 0 and isset($_SESSION['session_started']) and $_SESSION['session_started'] == true)
-			$authenticated = true;
-		else {
-			$authenticated = false;
-			$message .= 'Authentication failed!\nProceeding in published mode...\n';
-		}
-	}
+
 	## Not authenticated
-	else
-		$authenticated = false;
-	
-	// Cleanup
-	$user = $_SERVER['PHP_AUTH_USER'];
-	unset($pass);
+	if(!$authenticated) {
+		$message .= 'Authentication failed!\n';
+	}
 	
 	## Login
 	if((isset($_GET['login']) and !$authenticated)) {
@@ -128,6 +122,7 @@ if(REQUIRE_AUTH) {
 	if(isset($_GET['logout']) and $authenticated) {
 		unset($_SESSION['session_started']);
 		$authenticated = false;
+		http_response_code(401);
 	}
 	//	$redirect_url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].substr($_SERVER['REQUEST_URI'], 0, strrpos($_SERVER['REQUEST_URI'],'?'));
 	//	header("Location: $redirect_url");
@@ -145,7 +140,6 @@ $publish_file = "$file_path$file_name.html";
 # Gets the mode
 if(isset($_REQUEST['mode']))
 	$file_mode = $_REQUEST['mode'];
-
 
 # Discover the base URL of the application
 $baseurlapp = dirname($_SERVER['PHP_SELF']);
@@ -181,6 +175,11 @@ if(!SAVE_ENABLED or !$authenticated) {
 	$message .= "Demo mode - files are just read only\\n";
 }
 
+# Published mode
+if($file_mode == "preview" or ($file_mode == "view" and !$authenticated and REQUIRE_AUTH)) {
+	$file_mode = "published";
+	$message .= 'Proceeding in published mode.\n';
+}
 
 # Set file as read-only
 if($file_mode == "readonly") {
@@ -228,7 +227,7 @@ else if(($file_mode == "save" or $file_mode == "save_edit") and !$file_readonly)
 }
 
 # Upload a new file
-else if($file_mode == "upload" and !$file_readonly) {
+else if($file_mode == "upload" and !$file_readonly and REQUIRE_AUTH) {
 	$uploadfile = $file_path . basename($_FILES['file']['name']);
 
 	if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile)) {
@@ -244,7 +243,7 @@ else if($file_mode == "upload" and !$file_readonly) {
 }
 
 # Save template
-else if($file_mode == "template_save") {
+else if($file_mode == "template_save" and REQUIRE_AUTH) {
 	$template = $_REQUEST['template'];
 	$result = file_put_contents(TEMPLATE_PUBLISH, $template);
 	
@@ -341,15 +340,15 @@ foreach(glob($list_files_path) as $list_file) {
 	}
 }
 
-function max_upload() {
-	// Determines the maximum upload size allowed
-	$max_upload = (int)(ini_get('upload_max_filesize'));
-	$max_post = (int)(ini_get('post_max_size'));
-	$memory_limit = (int)(ini_get('memory_limit'));
-	$upload_mb = min($max_upload, $max_post, $memory_limit);
+// Determines the maximum upload size allowed
+$max_upload = min(
+	(int)(ini_get('upload_max_filesize')),
+	(int)(ini_get('post_max_size')),
+	(int)(ini_get('memory_limit')));
 
-	return $upload_mb;
-}
+# Get template file
+$template_file = htmlspecialchars(file_get_contents(
+		file_exists(TEMPLATE_PUBLISH) ? TEMPLATE_PUBLISH : TEMPLATE_EDIT));
 
 // for unicode output: (http://stackoverflow.com/questions/713293)
 header('Content-Type: text/html; charset=utf-8');
@@ -360,19 +359,14 @@ header('Content-Type: text/html; charset=utf-8');
 //header('Cache-Control: post-check=0, pre-check=0', FALSE);
 //header('Pragma: no-cache');
 
-# Get template file
-$template_file = htmlspecialchars(file_get_contents(
-		file_exists(TEMPLATE_PUBLISH) ? TEMPLATE_PUBLISH : TEMPLATE_EDIT));
-
 # Preview with the template provided
-if(isset($_REQUEST['preview']) and isset($_REQUEST['template']))
-	eval('?>'.$_REQUEST['template'].'<?php ');	
+if($file_mode == "published" and isset($_REQUEST['template']) and REQUIRED_AUTH)
+	eval('?>'.$_REQUEST['template'].'<?php ');
 
 # Preview with the saved template
-else if(file_exists(TEMPLATE_PUBLISH) and (!$authenticated or (isset($_REQUEST['preview']) and !isset($_REQUEST['template']))))
+elseif($file_mode == "published" and file_exists(TEMPLATE_PUBLISH))
 	include(TEMPLATE_PUBLISH);
 
-# Use the edit template	
+# Use the edit template
 else
 	include(TEMPLATE_EDIT);
-

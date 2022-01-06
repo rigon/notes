@@ -1,22 +1,22 @@
 <?php
 /**
-GLOBAL VARIABLES
-================
-SITE_NAME			- name of the website
-$base_file_name		- name of the file, all revision files have the same base filename
-$file_name			- filename of the current file
-$file_revisions		- list of revisions to the file
-$file_readonly		- flag indicating if the file is read only
-$file_mode			- mode of the file, view or edit
-$file_contents		- contents of the file
-$file_css			- list of CSS snippets
-$list_files			- list of attached files
-$url_files			- URL to the files
-$baseurlapp			- base URL for the application, i. e. URL without the filename
-$baseurl			- URL with the filename
-$html				- HTML of the published version of the file
-
-*/
+ * GLOBAL VARIABLES
+ * ================
+ * SITE_NAME		- name of the website
+ * $base_file_name	- name of the file, all revision files have the same base filename
+ * $file_name		- filename of the current file
+ * $file_revisions	- list of revisions to the file
+ * $file_readonly	- flag indicating if the file is read only
+ * $file_mode		- mode of the file (view, edit or published)
+ * $file_contents	- contents of the file
+ * $file_css		- list of CSS snippets
+ * $list_files		- list of attached files
+ * $url_files		- URL to the files
+ * $baseurlapp		- base URL for the application, i. e. URL without the filename
+ * $baseurl			- URL with the filename
+ * $html			- HTML of the published version of the file
+ * $max_upload		- Maximum size for uploading data
+ */
 ?><!DOCTYPE html>
 <html>
 	<head>
@@ -269,7 +269,7 @@ $html				- HTML of the published version of the file
 							<ul class="dropdown-menu" role="menu">
 								<li><a id="template_edit_button" href="#">Edit template</a></li>
 								<li><a id="publish" href="#">Publish file</a></li>
-								<li><a href="<?php echo $baseurl; ?>?preview" target="_blank">View published version</a></li>
+								<li><a href="<?php echo $baseurl; ?>?mode=preview" target="_blank">View published version</a></li>
 								<li class="divider"></li>
 								<li><a id="download_html" href="#">Download as HTML</a></li>
 								<li><a id="download_markdown" href="#">Download as Markdown</a></li>
@@ -327,7 +327,9 @@ $html				- HTML of the published version of the file
 		<div class="container">
 			<div class="row">
 				<!-- Markdown -->
-				<div id="wmd-preview-editor" class="viewer col-md-<?php echo ($file_mode=="edit" ? "6" : "12"); ?>"></div>
+				<div id="wmd-preview-editor" class="viewer col-md-<?php echo ($file_mode=="edit" ? "6" : "12"); ?>">
+					<?php if($file_mode=="published") { echo $html; } ?>
+				</div>
 
 				<!-- Editor -->
 				<?php if ($file_mode=="edit") { ?>
@@ -398,7 +400,9 @@ $html				- HTML of the published version of the file
 				});
 				
 				// Fills the viewer with HTML
-				$("#wmd-preview-editor").html(converter.makeHtml(markdown));
+				if(mode != 'published') {
+					$("#wmd-preview-editor").html(converter.makeHtml(markdown));
+				}
 				
 				if(mode == 'edit') {
 					// Sets textarea with the text
@@ -445,7 +449,7 @@ $html				- HTML of the published version of the file
 			});
 			
 			$("#template_preview").click(function() {
-				$.post("<?php echo $baseurl; ?>?preview", {
+				$.post("<?php echo $baseurl; ?>?mode=preview", {
 					template: templateEditor.getValue()
 				}).done(function(data) {
 					var previewWindow = window.open("", "spmdwe_preview");
@@ -477,7 +481,7 @@ $html				- HTML of the published version of the file
 
 			var dropzone = new Dropzone(document.documentElement, {		// Make the whole document a dropzone
 				url: "<?php echo $baseurl; ?>",	// Set the url
-				maxFilesize: <?php echo max_upload(); ?>,
+				maxFilesize: <?php echo $max_upload; ?>,
 				thumbnailWidth: 80,
 				thumbnailHeight: 80,
 				parallelUploads: 30,
