@@ -9,7 +9,7 @@
 # Source: http://people.w3.org/~dom/archives/2004/07/testing-php-pages-with-query_string/
 
 # Configuration
-$file_name = get_env("HOMEPAGE","home");	# file by default
+$file_name = define_env("HOMEPAGE","home");	# file by default
 $file_mode = "view";						# "view" (default), "edit", "save", "save_edit", "upload", "template_save", "publish", "published"
 
 define_env('SITE_NAME', 'Spmdwe Editor');	# Website name
@@ -28,12 +28,10 @@ define('DEFAULT_TEXT', "# Creating a new file\n\nThis file does not exist. You c
 
 # Application
 
-function get_env($name, $default) {
-	return isset($_ENV[$name]) ? $_ENV[$name] : $default;
-}
 function define_env($name, $default) {
 	$value = isset($_ENV[$name]) ? $_ENV[$name] : $default;
 	define($name, $value);
+	return $value;
 }
 
 # Ensure if the enviroment is correct
@@ -168,7 +166,10 @@ else {
 
 # Application in Demo mode (read-only)
 if(!SAVE_ENABLED or !$authenticated) {
-	if($file_mode == "template_save") die("Could not save template because authentication is invalid.");
+	if($file_mode == "template_save")
+		die("Could not save template because authentication is invalid.");
+	if($file_mode == "upload")
+		die("Could not upload files because authentication is invalid.");
 	
 	$file_mode = "view";
 	$file_readonly = true;
@@ -267,8 +268,8 @@ else if($file_mode == "publish") {
 
 # Download ZIP file with all files of the page
 else if($file_mode == "downloadzip") {
-	header( "Content-Type: application/x-zip" );
-	header( "Content-Disposition: attachment; filename=\"publish.zip\"" );
+	header("Content-Type: application/x-zip");
+	header("Content-Disposition: attachment; filename=\"$file_name.zip\"");
 
 	$stream = popen("zip -qj - files/$file_name/*", "r");
 	if($stream) {
@@ -279,42 +280,55 @@ else if($file_mode == "downloadzip") {
 }
 
 
+if($authenticated) {
+	# Gets the file contents
+	$message .= "Opening $file_name in $file_mode mode\\n";
 
-# Gets the file contents
-$message .= "Opening $file_name in $file_mode mode\\n";
-
-// check if the file exists
-$file_contents = false;
-if(file_exists($file_path_md))
-	$file_contents = file_get_contents($file_path_md);
+	// check if the file exists
+	$file_contents = false;
+	if(file_exists($file_path_md))
+		$file_contents = file_get_contents($file_path_md);
 
 
-if($file_contents == false) {
-	$file_contents = DEFAULT_TEXT;
-	$file_mode = 'edit';
-	$message .= "Cannot open $file_path_md. Proceeding in edit mode...\\n";
+	if($file_contents == false) {
+		$file_contents = DEFAULT_TEXT;
+		$file_mode = 'edit';
+		$message .= "Cannot open $file_path_md. Proceeding in edit mode...\\n";
+	}
+	else {
+		$pos = 0;
+		do {
+			$pos_start = strpos($file_contents, CSS_START, $pos);		# find the next occurrence of CSS_START
+			if($pos_start === false) break;								# if there is no more CSS
+			$pos_end = strpos($file_contents, CSS_END, $pos_start);		# find the end of CSS block
+			if($pos_end !== false) {									# if the end if found, add it to the list
+				$file_css[] = substr($file_contents, $pos_start + strlen(CSS_START), $pos_end - $pos_start - strlen(CSS_START));
+				$pos = $pos_end + strlen(CSS_END);
+			}
+			else
+				$pos = strlen($file_contents) - 1;
+		} while(true);
+	}
 }
-else {
-	$pos = 0;
-	do {
-		$pos_start = strpos($file_contents, CSS_START, $pos);		# find the next occurrence of CSS_START
-		if($pos_start === false) break;								# if there is no more CSS
-		$pos_end = strpos($file_contents, CSS_END, $pos_start);		# find the end of CSS block
-		if($pos_end !== false) {									# if the end if found, add it to the list
-			$file_css[] = substr($file_contents, $pos_start + strlen(CSS_START), $pos_end - $pos_start - strlen(CSS_START));
-			$pos = $pos_end + strlen(CSS_END);
-		}
-		else
-			$pos = strlen($file_contents) - 1;
-	} while(true);
-}
-
 
 # if the file was published
-$html = "<h1>File not published!</h1>";
-if(file_exists($publish_file))
-	$html = file_get_contents($publish_file);
-
+if($file_mode == "published") {
+	$html = false;
+	if(file_exists($publish_file))
+		$html = file_get_contents($publish_file);
+	
+	if($html == false) {
+		http_response_code(404);
+		$html = <<<TEMPLATE404
+			<div class="text-center">
+				<h1 class="error">404</h1>
+				<p class="lead text-gray-800 mb-5">Page Not Found</p>
+				<p class="text-gray-500 mb-0">It looks like you found a glitch in the matrix...</p>
+				<a href="/">&larr; Back to home</a>
+			</div>
+			TEMPLATE404;
+	}
+}
 
 # Base path for history files
 $file_revisions_path = $file_path.$base_file_name.REVISION_MARKER.'????????_??????.md';
@@ -323,7 +337,7 @@ $list_files_path = "$file_path*";
 # List of revision files
 $count = 0;
 $file_revisions = array();
-foreach(glob($file_revisions_path) as $file_revision) {	
+foreach(glob($file_revisions_path) as $file_revision) {
 	$file_revisions[$count] = substr($file_revision, strlen($file_path), -strlen('.md'));
 	$count++;
 }
@@ -360,7 +374,7 @@ header('Content-Type: text/html; charset=utf-8');
 //header('Pragma: no-cache');
 
 # Preview with the template provided
-if($file_mode == "published" and isset($_REQUEST['template']) and REQUIRED_AUTH)
+if($file_mode == "published" and isset($_REQUEST['template']) and REQUIRE_AUTH)
 	eval('?>'.$_REQUEST['template'].'<?php ');
 
 # Preview with the saved template
