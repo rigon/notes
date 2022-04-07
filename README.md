@@ -103,15 +103,14 @@ Then the next configuration should be used. This can be done via `.htaccess` fil
 
     RewriteEngine on
     
-    RewriteCond %{REQUEST_URI} !^/notes/static
-    RewriteCond %{REQUEST_URI} !^/notes/files/[^/]+/[^/]+\.[^/]+
-    
+    # Rewrite URL as a query parameter for index.php
+    RewriteCond %{REQUEST_URI} !^/static
+    RewriteCond %{REQUEST_URI} !^/files/(([\w-_,\ ]+\.)*[\w-_,\ ]+\/)+([\w-_,\ ]+\.)*[\w-_,\ ]+$
     RewriteRule ^([^/]*)$ index.php?file=$1 [L,QSA]
     
-    
-    RewriteCond %{REQUEST_URI} !^/notes/static
-    RewriteCond %{REQUEST_URI} !^/notes/files/[^/]+/[^/]+\.[^/]+
-    
+    # Forbid non-existing URLs
+    RewriteCond %{REQUEST_URI} !^/static
+    RewriteCond %{REQUEST_URI} !^/files/(([\w-_,\ ]+\.)*[\w-_,\ ]+\/)+([\w-_,\ ]+\.)*[\w-_,\ ]+$
     RewriteRule .* "-" [F]
 
 You have to change the directory `/notes` to the directory you've installed.
