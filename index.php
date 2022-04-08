@@ -63,7 +63,7 @@ $message = "";
 $file_readonly = true;
 $file_css = array();
 $user = "";
-
+$status_code_set = false;
 
 # Authentication
 $authenticated = !REQUIRE_AUTH;		// Automatically authenticated if authentication is not required
@@ -107,20 +107,22 @@ if(REQUIRE_AUTH) {
 	if(!$authenticated) {
 		$message .= 'Authentication failed!\n';
 	}
-	
+
 	## Login
 	if((isset($_GET['login']) and !$authenticated)) {
 		// Force the browser to prompt for a username and password
+		http_response_code(401);
 		header('WWW-Authenticate: Basic realm="Enter your credencials to login"');
-		header('HTTP/1.0 401 Unauthorized');
+		$status_code_set = true;
 		$authenticated = false;
 	}
 	
 	## Logout
 	if(isset($_GET['logout']) and $authenticated) {
 		unset($_SESSION['session_started']);
-		$authenticated = false;
 		http_response_code(401);
+		$status_code_set = true;
+		$authenticated = false;
 	}
 	//	$redirect_url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].substr($_SERVER['REQUEST_URI'], 0, strrpos($_SERVER['REQUEST_URI'],'?'));
 	//	header("Location: $redirect_url");
@@ -318,7 +320,9 @@ if($file_mode == "published") {
 		$html = file_get_contents($publish_file);
 	
 	if($html == false) {
-		http_response_code(404);
+		if(!$status_code_set)
+			http_response_code(404);
+		
 		$html = <<<TEMPLATE404
 			<div class="text-center">
 				<h1 class="error">404</h1>
