@@ -1,10 +1,10 @@
 Single-page Markdown Web Editor (`spmdwe`)
 ===
-Copyleft [rigon](http://www.rigon.tk), February 2016
+Copyleft [rigon](https://rigon.github.io), February 2016
 
 Homepage and demo:
 
-* [http://www.spmdwe.tk](http://www.spmdwe.tk)
+* [http://spmdwe.infinityfreeapp.com](http://spmdwe.infinityfreeapp.com)
 
 
 Intro
