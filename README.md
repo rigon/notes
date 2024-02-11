@@ -4,7 +4,7 @@ Copyleft [rigon](https://rigon.github.io), February 2016
 
 Homepage and demo:
 
-* [http://spmdwe.infinityfreeapp.com](http://spmdwe.infinityfreeapp.com)
+* [http://spmdwe.rigon.uk](http://spmdwe.rigon.uk)
 
 
 Intro
